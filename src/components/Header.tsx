@@ -8,8 +8,7 @@ import { useUser, SignInButton, SignOutButton } from "@clerk/clerk-react";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { isSignedIn, user } = useUser();
-  console.log('user', user)
+  const { isSignedIn } = useUser();
 
   return (
     <header className="bg-white">

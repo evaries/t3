@@ -10,7 +10,8 @@ const Admin = () => {
   const { mutate } = api.post.createPost.useMutation({
     onSuccess: () => {
       setText('')
-      ctx.post.getAllPost.invalidate()
+      void ctx.post.getAllPost.invalidate()
+
     },
     onError: (err) => {
       const error = err.data?.zodError?.fieldErrors.content
