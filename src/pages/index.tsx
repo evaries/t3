@@ -1,9 +1,12 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import React from "react";
+import { useUser } from "@clerk/nextjs";
+import Posts from "y/components/post/Posts";
 
 
 const Home: NextPage = (props) => {
+  const { isSignedIn } = useUser();
   return (
     <>
       <Head>
@@ -12,7 +15,7 @@ const Home: NextPage = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex h-full justify-center items-center bg-gray-100 " >
-        Login to see posts
+        {isSignedIn ? <Posts /> : <>Login to see posts</>}
       </main>
     </>
   );
