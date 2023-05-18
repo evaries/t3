@@ -8,6 +8,17 @@ export const postRouter = createTRPCRouter({
     return ctx.prisma.post.findMany()
   }),
 
+  getPublicPostByUsername: publicProcedure.input(z.object({
+    username: z.string()
+  })).query(async ({ ctx, input }) => {
+    return ctx.prisma.post.findMany({
+      where: {
+        username: input.username
+      }
+    })
+  }),
+
+
   getPostByAuthorId: privateProcedure.query(async ({ ctx }) => {
     const authorId = ctx.userId
     return ctx.prisma.post.findMany({
@@ -20,11 +31,13 @@ export const postRouter = createTRPCRouter({
   createPost: privateProcedure.input(z.object({
     content: z.string().min(1)
   })).mutation(async ({ ctx, input }) => {
-    const authorId = ctx.userId
+    const { userId: authorId, username } = ctx
     return ctx.prisma.post.create({
       data: {
         author: authorId,
-        content: input.content
+        content: input.content,
+        username: username
+
       }
     })
   }),

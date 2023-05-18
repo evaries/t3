@@ -5,10 +5,15 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { useUser, SignInButton, SignOutButton } from "@clerk/clerk-react";
+import { useRouter } from 'next/router';
+import { useClerk } from "@clerk/clerk-react";
+
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { isSignedIn } = useUser();
+  const { signOut } = useClerk();
+  const router = useRouter()
 
   return (
     <header className="bg-white">
@@ -36,11 +41,14 @@ export default function Header() {
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
 
-          {!!isSignedIn && <SignOutButton>
+          {!!isSignedIn && <div onClick={() => {
+            void signOut()
+            void router.push('/')
+          }}>
             <div className='cursor-pointer' > Log out <span aria-hidden="true">&rarr;</span></div>
-          </SignOutButton>}
+          </div>}
 
-          {!isSignedIn && <SignInButton>
+          {!isSignedIn && <SignInButton redirectUrl='/username' >
             <div className='cursor-pointer' >Log in <span aria-hidden="true">&rarr;</span></div>
           </SignInButton>}
 

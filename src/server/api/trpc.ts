@@ -18,7 +18,7 @@ import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 
 import { prisma } from "y/server/db";
 
-import { getAuth } from "@clerk/nextjs/server";
+import { clerkClient, getAuth } from "@clerk/nextjs/server";
 
 type CreateContextOptions = Record<string, never>;
 /**
@@ -28,15 +28,18 @@ type CreateContextOptions = Record<string, never>;
  * @see https://trpc.io/docs/context
  */
 
-export const createTRPCContext = (opts: CreateNextContextOptions) => {
+export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req } = opts;
   const sesh = getAuth(req);
 
   const userId = sesh.userId;
+  const user = await clerkClient.users.getUser(userId as string)
+  const username = user.unsafeMetadata.username as string
 
   return {
     prisma,
     userId,
+    username
   };
 };
 /**
