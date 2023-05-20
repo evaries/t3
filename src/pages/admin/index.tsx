@@ -41,9 +41,9 @@ const Posts = () => {
     }
   })
   return (
-    <main className="flex w-1/2 flex-col items-center justify-center bg-gray-100">
+    <main className="flex lg:w-1/2 px-6 w-full flex-col items-center justify-center bg-gray-100">
       <div className="w-full">
-        <form className="md:flex md:items-center mb-6">
+        <form className="flex md:flex md:items-center mb-6">
           <div className="w-full">
             <input type="text" value={text} placeholder="Post something"
               onChange={(e) => setText(e.target.value)} className="bg-gray-200 appearance-none 

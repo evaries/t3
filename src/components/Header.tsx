@@ -4,7 +4,7 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import { useUser, SignInButton, SignOutButton } from "@clerk/clerk-react";
+import { useUser, SignInButton } from "@clerk/clerk-react";
 import { useRouter } from 'next/router';
 import { useClerk } from "@clerk/clerk-react";
 
@@ -12,8 +12,6 @@ import { useClerk } from "@clerk/clerk-react";
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { isSignedIn } = useUser();
-  const { signOut } = useClerk();
-  const router = useRouter()
 
   return (
     <header className="bg-white">
@@ -40,18 +38,7 @@ export default function Header() {
           </a>
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-
-          {!!isSignedIn && <div onClick={() => {
-            void signOut()
-            void router.push('/')
-          }}>
-            <div className='cursor-pointer' > Log out <span aria-hidden="true">&rarr;</span></div>
-          </div>}
-
-          {!isSignedIn && <SignInButton redirectUrl='/username' >
-            <div className='cursor-pointer' >Log in <span aria-hidden="true">&rarr;</span></div>
-          </SignInButton>}
-
+          {!isSignedIn ? <SignIn /> : <SignOut />}
         </div>
       </nav>
       <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
@@ -85,16 +72,34 @@ export default function Header() {
               </a>
             </div>
             <div className="py-6">
-              <a
-                href="#"
-                className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-              >
-                Log in
-              </a>
+              {!isSignedIn ? <SignIn /> : <SignOut />}
             </div>
           </div>
         </Dialog.Panel>
       </Dialog>
     </header >
+  )
+}
+
+const SignIn = () => {
+  return (
+    <SignInButton redirectUrl='/username' >
+      <div className='cursor-pointer' >Log in <span aria-hidden="true">&rarr;</span></div>
+    </SignInButton>
+
+  )
+}
+
+const SignOut = () => {
+  const { signOut } = useClerk();
+  const router = useRouter()
+
+  return (
+    <div onClick={() => {
+      void signOut()
+      void router.push('/')
+    }}>
+      <div className='cursor-pointer' > Log out <span aria-hidden="true">&rarr;</span></div>
+    </div>
   )
 }

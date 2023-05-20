@@ -33,7 +33,7 @@ const SetUsername: NextPage<SetUsernameProps> = (props) => {
   return (
     <main className="flex w-1/2 flex-col items-center justify-center bg-gray-100">
       <div className="w-full">
-        <form className="md:flex md:items-center mb-6">
+        <form className="flex md:flex md:items-center mb-6">
           <div className="w-full">
             <input type="text" value={username} placeholder="Update your public profile link"
               onChange={(e) => setUsername(e.target.value)} className="bg-gray-200 appearance-none 
