@@ -2,11 +2,11 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
-  const { isSignedIn } = useUser();
-
-  if (!isSignedIn) return <div className="h-full justify-center items-center" >Login to see posts</div>
+  const { isSignedIn, user } = useUser();
+  const { push } = useRouter()
 
   return (
     <>
@@ -16,7 +16,29 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex w-full h-full justify-center items-center" >
-        <div>Here will be landing page</div>
+        {/*TODO:separate this into components*/}
+        {!isSignedIn
+          ? <div>Here will be landing page for non auth state</div>
+          : <div className="flex flex-col items-center " >
+            <div>Hello {user.firstName}! Looks great today!</div>
+            <div className="flex mt-3 " >
+              <button onClick={(e) => {
+                void e.preventDefault()
+                void push('/admin')
+              }}
+                className="mx-2 bg-gray-500	 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md">
+                go to admin
+              </button>
+              <button onClick={(e) => {
+                void e.preventDefault()
+                void push(`/${String(user.unsafeMetadata.username)}`)
+              }}
+                className="mx-2 bg-gray-500	 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md">
+                see public page
+              </button>
+            </div>
+          </div>
+        }
       </main>
     </>
   );

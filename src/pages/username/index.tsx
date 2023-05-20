@@ -1,10 +1,17 @@
-import { useClerk } from "@clerk/nextjs"
-import { useState } from "react"
+import { useUser } from "@clerk/nextjs"
+import { useEffect, useState } from "react"
 import { useRouter } from 'next/navigation';
+import { NextPage } from "next";
 
-const SetUsername = () => {
+export type SetUsernameProps = {
+  user: {
+    username: string
+  }
+}
+
+const SetUsername: NextPage<SetUsernameProps> = (props) => {
   const [username, setUsername] = useState('')
-  const { user } = useClerk()
+  const { user } = useUser();
   const router = useRouter();
   const updateProfile = async () => {
     await user?.update({ unsafeMetadata: { username: username } })
@@ -14,9 +21,14 @@ const SetUsername = () => {
     try {
       await updateProfile()
     } catch (e) {
-      console.log(e)
     }
   }
+  useEffect(() => {
+    if (props.user.username) {
+      router.push('/admin')
+    }
+  }, [])
+
 
   return (
     <main className="flex w-1/2 flex-col items-center justify-center bg-gray-100">
@@ -32,7 +44,7 @@ const SetUsername = () => {
             void onSubmit()
             e.preventDefault()
             router.push('/admin')
-            }}
+          }}
             className="mx-2 bg-gray-500	 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md">
             set
           </button>
@@ -41,4 +53,21 @@ const SetUsername = () => {
     </main>
   )
 }
+import { clerkClient, getAuth } from "@clerk/nextjs/server";
+import { GetServerSideProps } from 'next'
+
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const { userId } = getAuth(ctx.req)
+
+  const user = userId ? await clerkClient.users.getUser(userId) : undefined
+
+  const username = {
+    username: user?.unsafeMetadata?.username ?? ''
+  }
+
+
+  return { props: { user: username } }
+
+}
+
 export default SetUsername;

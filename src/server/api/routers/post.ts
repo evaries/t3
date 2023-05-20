@@ -31,7 +31,7 @@ export const postRouter = createTRPCRouter({
   createPost: privateProcedure.input(z.object({
     content: z.string().min(1)
   })).mutation(async ({ ctx, input }) => {
-    const { userId: authorId, username } = ctx
+    const { userId: authorId, username} = ctx
     return ctx.prisma.post.create({
       data: {
         author: authorId,
