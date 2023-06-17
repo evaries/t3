@@ -11,16 +11,22 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model User {
+  id         String   @id @default(cuid())
+  clerkId    String   @unique
+  username   String   @unique
+  attributes Json
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Link       Link[]
 }
 
-model Post {
+model Link {
   id        String   @id @default(cuid())
-  author    String
-  content   String
-  username  String
+  name      String
+  to    String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [authorId], references: [clerkId])
+  authorId  String?
 }

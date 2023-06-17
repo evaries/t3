@@ -5,6 +5,9 @@ export default {
   theme: {
     extend: {
       'layout': '200px minmax(900px, 1fr) 100px',
+      fontFamily: {
+        sans: ['var(--font-virgil)']
+      }
     },
   },
   plugins: [],
