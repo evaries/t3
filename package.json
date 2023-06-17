@@ -13,18 +13,21 @@
     "@clerk/nextjs": "^4.17.3",
     "@headlessui/react": "^1.7.14",
     "@heroicons/react": "^2.0.18",
+    "@next/font": "^13.4.5",
     "@prisma/client": "^4.11.0",
     "@t3-oss/env-nextjs": "^0.2.1",
-    "@tanstack/react-query": "^4.28.0",
+    "@tanstack/react-query": "^4.29.7",
     "@trpc/client": "^10.18.0",
     "@trpc/next": "^10.18.0",
     "@trpc/react-query": "^10.18.0",
     "@trpc/server": "^10.18.0",
+    "micro": "^10.0.1",
     "next": "^13.4.1",
     "next-superjson-plugin": "^0.5.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "superjson": "^1.12.2",
+    "svix": "^1.4.12",
     "zod": "^3.21.4"
   },
   "devDependencies": {
@@ -40,12 +43,17 @@
     "eslint-config-next": "^13.4.1",
     "postcss": "^8.4.21",
     "prettier": "^2.8.6",
-    "prettier-plugin-tailwindcss": "^0.2.6",
+    "prettier-plugin-tailwindcss": "^0.2.8",
     "prisma": "^4.11.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5.0.2"
   },
   "ct3aMetadata": {
     "initVersion": "7.13.0"
+  },
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
   }
 }

@@ -1,9 +1,9 @@
 const Footer = () => {
   return (
-    <footer className="flex justify-center items-center" >
+    <footer className="flex items-center justify-center">
       Footer will be here
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

@@ -34,12 +34,10 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
 
   const userId = sesh.userId;
   const user = await clerkClient.users.getUser(userId as string)
-  const username = user.unsafeMetadata.username as string
 
   return {
     prisma,
     userId,
-    username
   };
 };
 /**
