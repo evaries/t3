@@ -28,12 +28,10 @@ type CreateContextOptions = Record<string, never>;
  * @see https://trpc.io/docs/context
  */
 
-export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+export const createTRPCContext = (opts: CreateNextContextOptions) => {
   const { req } = opts;
   const sesh = getAuth(req);
-
   const userId = sesh.userId;
-  const user = await clerkClient.users.getUser(userId as string)
 
   return {
     prisma,
@@ -58,9 +56,8 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       ...shape,
       data: {
         ...shape.data,
-        zodError: error.cause instanceof ZodError
-          ? error.cause.flatten()
-          : null,
+        zodError:
+          error.cause instanceof ZodError ? error.cause.flatten() : null,
       },
     };
   },

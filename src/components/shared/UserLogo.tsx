@@ -1,11 +1,8 @@
-import { useUser } from "@clerk/nextjs";
-export const UserLogo = () => {
-  const { user } = useUser();
+import { NextPage } from "next";
+export const UserAvatar: NextPage<{ url: string }> = ({ url }) => {
   return (
-    <div className="centered mb-5 max-h-100px "  >
-      <img className="w-10 h-10 rounded-full"
-        src={user?.profileImageUrl} alt="Rounded avatar" />
+    <div className="centered max-h-100px mb-5 ">
+      <img className="h-10 w-10 rounded-full" src={url} alt="Rounded avatar" />
     </div>
-  )
-
-}
+  );
+};

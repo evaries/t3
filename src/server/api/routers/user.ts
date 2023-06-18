@@ -8,7 +8,6 @@ import {
 
 export const userRouter = createTRPCRouter({
   getCurrentUser: privateProcedure.query(async ({ ctx }) => {
-    console.log(ctx.userId);
     return ctx.prisma.user.findFirst({
       where: {
         clerkId: ctx.userId,
@@ -46,7 +45,7 @@ export const userRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return ctx.prisma.user.findFirst({
         where: {
-          clerkId: input.id,
+          username: input.id,
         },
         include: {
           Link: true,

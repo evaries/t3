@@ -9,7 +9,7 @@ import { linkRouter } from "./routers/link";
  */
 export const appRouter = createTRPCRouter({
   user: userRouter,
-  link: linkRouter
+  link: linkRouter,
 });
 
 // export type definition of API

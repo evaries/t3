@@ -1,13 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import { api } from "y/utils/api";
 import PrivateLink from "y/components/entities/PrivateLink";
-import { UserLogo } from "y/components/shared/UserLogo";
+import { UserAvatar } from "y/components/shared/UserLogo";
 import EditIcon from "y/components/shared/EditIcon";
 import { useState } from "react";
 import OkIcon from "y/components/shared/OkIcon";
+import { useUser } from "@clerk/nextjs";
 
 const Links = () => {
   const ctx = api.useContext();
+  const clerkUser = useUser();
   const { data: user, isLoading } = api.user.getCurrentUser.useQuery();
   const [username, setUsername] = useState<string>(user?.username ?? "");
   const [isEditing, setIsEditing] = useState(false);
@@ -44,7 +46,7 @@ const Links = () => {
   return (
     <main className="flex w-full flex-col items-center justify-center bg-gray-100 px-6 lg:w-1/2">
       <div className="mb-2">
-        <UserLogo />
+        <UserAvatar url={clerkUser.user?.profileImageUrl ?? ""} />
       </div>
       <div className="mb-2 flex flex-row">
         <div className="centered max-h-100px mb-5 flex-row ">
@@ -52,6 +54,11 @@ const Links = () => {
             {isEditing ? <OkIcon /> : <EditIcon />}
           </div>
           <input
+            style={{
+              width: ref.current
+                ? String(ref.current.value.length) + "ch"
+                : "auto",
+            }}
             className={`w-max rounded bg-transparent outline-none ${
               isEditing ? "outline-gray-500" : ""
             }`}
