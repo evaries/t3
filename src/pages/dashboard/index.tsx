@@ -1,20 +1,32 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { api } from "y/utils/api";
 import PrivateLink from "y/components/entities/PrivateLink";
 import { UserLogo } from "y/components/shared/UserLogo";
-import { Username } from "y/components/shared/Username";
+import EditIcon from "y/components/shared/EditIcon";
+import { useState } from "react";
+import OkIcon from "y/components/shared/OkIcon";
 
 const Links = () => {
   const ctx = api.useContext();
-
+  const { data: user, isLoading } = api.user.getCurrentUser.useQuery();
+  const [username, setUsername] = useState<string>(user?.username ?? "");
+  const [isEditing, setIsEditing] = useState(false);
   const { data } = api.link.getAllUserLinks.useQuery();
+  const ref = useRef<HTMLInputElement>(null);
+
   const { mutate } = api.link.createLink.useMutation({
     onSuccess: () => {
       void ctx.link.getAllUserLinks.invalidate();
     },
-    onError: (err) => {
-      const error = err.data?.zodError?.fieldErrors.content;
-      console.log(error);
+  });
+
+  useEffect(() => {
+    setUsername(user?.username ?? "");
+  }, [user?.username]);
+
+  const { mutate: updateUsername } = api.user.updateUsername.useMutation({
+    onSuccess: () => {
+      void ctx.user.getCurrentUser.invalidate();
     },
   });
 
@@ -22,13 +34,41 @@ const Links = () => {
     mutate({ name: "name", to: "#" });
   };
 
+  const editUsername = () => {
+    if (isEditing) {
+      updateUsername({ username });
+    }
+    setIsEditing(!isEditing);
+  };
+
   return (
     <main className="flex w-full flex-col items-center justify-center bg-gray-100 px-6 lg:w-1/2">
       <div className="mb-2">
         <UserLogo />
       </div>
-      <div className="mb-2">
-        <Username username="vrh" />
+      <div className="mb-2 flex flex-row">
+        <div className="centered max-h-100px mb-5 flex-row ">
+          <div className="mr-2" onClick={editUsername}>
+            {isEditing ? <OkIcon /> : <EditIcon />}
+          </div>
+          <input
+            className={`w-max rounded bg-transparent outline-none ${
+              isEditing ? "outline-gray-500" : ""
+            }`}
+            ref={ref}
+            id="username"
+            name="username"
+            type="text"
+            disabled={!isEditing}
+            value={username}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                editUsername();
+              }
+            }}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
       </div>
       {data?.map((link) => {
         return <PrivateLink key={link.id} link={link} />;
