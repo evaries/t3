@@ -1,11 +1,10 @@
-import { Webhook, WebhookRequiredHeaders } from "svix";
+import type { WebhookRequiredHeaders } from "svix";
 import { prisma } from "y/server/db";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { IncomingHttpHeaders } from "http";
+import type { NextApiRequest } from "next";
+import type { IncomingHttpHeaders } from "http";
 
 export default async function handler(
-  req: NextApiRequestWithSvixRequiredHeaders,
-  res: NextApiResponse
+  req: NextApiRequestWithSvixRequiredHeaders
 ) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const body: Event = req.body;

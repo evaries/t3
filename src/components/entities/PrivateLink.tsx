@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import DeleteIcon from "../shared/DeleteIcon";
 import EditIcon from "../shared/EditIcon";
 import OkIcon from "../shared/OkIcon";
 import Toggle from "../shared/Toggle";
 import { api } from "y/utils/api";
-import { Link } from "@prisma/client";
+import type { Link } from "@prisma/client";
 
 export type PrivateLinkProps = {
   link: Link;

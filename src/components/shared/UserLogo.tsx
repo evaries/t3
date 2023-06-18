@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import type { NextPage } from "next";
 export const UserAvatar: NextPage<{ url: string }> = ({ url }) => {
   return (
     <div className="centered max-h-100px mb-5 ">

@@ -1,11 +1,16 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import PublicLink from "y/components/entities/PublicLink";
 import { UserAvatar } from "y/components/shared/UserLogo";
 import { api } from "y/utils/api";
+import { useRouter } from "next/router";
 
-const UserLink: NextPage<{ slug: string | string[] | undefined }> = ({
-  slug,
-}) => {
+export type NextPageWithLayout = NextPage & {
+  Layout?: string;
+};
+
+const PublicPage: NextPageWithLayout = () => {
+  const router = useRouter();
+  const slug = router.query.slug;
   //TODO: add handlers here
   if (!slug) return <div>slug</div>;
   if (Array.isArray(slug)) return <div>slug</div>;
@@ -26,8 +31,8 @@ const UserLink: NextPage<{ slug: string | string[] | undefined }> = ({
   const avatar = JSON.parse(JSON.stringify(user.attributes))
     .image_url as string;
   return (
-    <div className="centered">
-      <div>
+    <div className="centered h-screen">
+      <div className="w-80">
         <UserAvatar url={avatar} />
         <div className="my-2 flex justify-center">{`@${user.username}`}</div>
         {user.Link.map((link) => (
@@ -38,16 +43,6 @@ const UserLink: NextPage<{ slug: string | string[] | undefined }> = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps<{
-  slug: string | string[] | undefined;
-}> = async (ctx) => {
-  const slug = ctx.params!.slug;
-  await Promise.resolve(true);
-  return {
-    props: {
-      slug,
-    },
-  };
-};
+export default PublicPage;
 
-export default UserLink;
+PublicPage.Layout = "public";
