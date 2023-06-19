@@ -8,6 +8,7 @@ import { api } from "y/utils/api";
 const Home: NextPage = () => {
   const { isSignedIn, user } = useUser();
   const { push } = useRouter();
+  const { data } = api.user.getCurrentUser.useQuery();
 
   return (
     <>
@@ -27,16 +28,16 @@ const Home: NextPage = () => {
               <button
                 onClick={(e) => {
                   void e.preventDefault();
-                  void push("/admin");
+                  void push("/dashboard");
                 }}
                 className="mx-2 rounded-md	 bg-gray-500 px-4 py-2 font-bold text-white hover:bg-gray-700"
               >
-                go to admin
+                go to dashboard
               </button>
               <button
                 onClick={(e) => {
                   void e.preventDefault();
-                  void push(`/${String(user.unsafeMetadata.username)}`);
+                  void push(data ? `/${data?.username}` : "");
                 }}
                 className="mx-2 rounded-md	 bg-gray-500 px-4 py-2 font-bold text-white hover:bg-gray-700"
               >
