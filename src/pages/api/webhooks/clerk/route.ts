@@ -10,46 +10,25 @@ export default async function handler(
   const body: Event = req.body;
   const eventType: EventType = body.type;
   const { id, ...attributes } = body.data;
-  switch (eventType) {
-    case "user.created":
-      try {
-        await prisma.user.create({
-          data: {
-            clerkId: id as string,
-            attributes,
-            username: String(id),
-          },
-        });
-      } catch (e) {
-        console.error(e);
-      }
-      break;
 
-    case "user.updated":
-      try {
-        await prisma.user.update({
-          where: { clerkId: id as string },
-          data: {
-            attributes,
-          },
-        });
-      } catch (e) {
-        console.error(e);
-      }
-      break;
-
-    case "user.deleted":
-      try {
-        await prisma.user.delete({
-          where: {
-            clerkId: id as string,
-          },
-        });
-      } catch (e) {
-        console.error(e);
-      }
-      break;
-  }
+  if (eventType === "user.created" || eventType === "user.updated")
+    try {
+      await prisma.user.upsert({
+        where: {
+          clerkId: id as string,
+        },
+        create: {
+          clerkId: id as string,
+          attributes,
+          username: String(id),
+        },
+        update: {
+          attributes,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+    }
 }
 
 type NextApiRequestWithSvixRequiredHeaders = NextApiRequest & {
