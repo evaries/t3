@@ -19,10 +19,19 @@ const PrivateLink: NextPage<PrivateLinkProps> = ({ link }) => {
     },
   });
 
+  const { mutate: toggleActive } = api.link.setIsActive.useMutation({
+    onSuccess: async () => {
+      await ctx.link.getAllUserLinks.invalidate();
+    },
+  });
+
   const deleteLink = (id: string) => {
     deleteLinkMutation({ id });
   };
 
+  const toggleIsActive = (id: string, isActive: boolean) => {
+    toggleActive({ id, isActive });
+  };
   return (
     <div className="centered h-30 my-2 max-w-xs">
       <div className="flex">
@@ -32,8 +41,11 @@ const PrivateLink: NextPage<PrivateLinkProps> = ({ link }) => {
               <Row name="name" value={link.name} id={link.id} />
               <Row name="to" value={link.to} id={link.id} />
             </div>
-            <div className="ml-3">
-              <Toggle />
+            <div
+              onClick={() => toggleIsActive(link.id, !link.isActive)}
+              className="ml-3"
+            >
+              <Toggle isActive={link.isActive} />
             </div>
           </div>
         </div>
@@ -66,7 +78,6 @@ const Row: NextPage<RowProps> = ({ name, value, id }) => {
   });
 
   const updateLink = (args: Record<string, string>) => {
-    console.log(args);
     updateLinkMutation({ id, ...args });
   };
 

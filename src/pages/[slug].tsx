@@ -3,6 +3,7 @@ import PublicLink from "y/components/entities/PublicLink";
 import { UserAvatar } from "y/components/shared/UserLogo";
 import { api } from "y/utils/api";
 import { useRouter } from "next/router";
+import ShareIconBox from "y/components/shared/ShareIconBox";
 
 export type NextPageWithLayout = NextPage & {
   Layout?: string;
@@ -32,10 +33,20 @@ const PublicPage: NextPageWithLayout = () => {
     .image_url as string;
   return (
     <div className="centered h-screen">
-      <div className="w-80">
+      <div className="relative w-80">
         <UserAvatar url={avatar} />
+        <div
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("copied", window.location.href);
+          }}
+          className="absolute right-0 top-0"
+        >
+          <ShareIconBox />
+        </div>
         <div className="my-2 flex justify-center">{`@${user.username}`}</div>
-        {user.Link.map((link) => (
+        {user.Link.filter((link) => link.isActive).map((link) => (
           <PublicLink href={link.to} name={link.name} key={link.id} />
         ))}
       </div>

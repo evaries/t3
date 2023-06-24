@@ -10,7 +10,11 @@ import { useUser } from "@clerk/nextjs";
 const Links = () => {
   const ctx = api.useContext();
   const clerkUser = useUser();
-  const { data: user, isLoading } = api.user.getCurrentUser.useQuery();
+  const {
+    data: user,
+    isLoading,
+    isFetched,
+  } = api.user.getCurrentUser.useQuery();
   const [username, setUsername] = useState<string>(user?.username ?? "");
   const [isEditing, setIsEditing] = useState(false);
   const { data } = api.link.getAllUserLinks.useQuery();
@@ -24,6 +28,10 @@ const Links = () => {
 
   useEffect(() => {
     setUsername(user?.username ?? "");
+  }, [isFetched]);
+
+  useEffect(() => {
+    setUsername(user?.username ?? "");
   }, [user?.username]);
 
   const { mutate: updateUsername } = api.user.updateUsername.useMutation({
@@ -33,7 +41,8 @@ const Links = () => {
   });
 
   const createEmptyLink = () => {
-    mutate({ name: "name", to: "#" });
+    const position = data ? String(data.length + 1) : "0";
+    mutate({ name: "name", to: "#", position });
   };
 
   const editUsername = () => {

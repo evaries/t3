@@ -1,14 +1,23 @@
-const Toggle = () => {
-  return (
-    <label className="relative inline-flex items-center cursor-pointer">
-      <input type="checkbox" value="" className="sr-only peer" />
-      <div className="flex items-center w-9 h-5 bg-gray-200 peer-focus:outline-none  
-     rounded-full peer dark:bg-gray-300 peer-checked:after:translate-x-full 
-    peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] 
-    after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all 
-    dark:border-gray-600 peer-checked:bg-gray-600"></div>
-    </label>
-  )
-}
+import { NextPage } from "next";
 
-export default Toggle
+const Toggle: NextPage<{ isActive: boolean }> = ({ isActive }) => {
+  return (
+    <label className="relative inline-flex cursor-pointer items-center">
+      <input
+        type="checkbox"
+        value=""
+        checked={isActive}
+        className="peer sr-only"
+      />
+      <div
+        className="peer flex h-5 w-9 items-center rounded-full  
+     bg-gray-200 after:absolute after:left-[2px] after:top-[2px] 
+    after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 
+    after:bg-white after:transition-all after:content-[''] peer-checked:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none 
+    dark:border-gray-600 dark:bg-gray-300"
+      ></div>
+    </label>
+  );
+};
+
+export default Toggle;

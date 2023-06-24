@@ -34,6 +34,7 @@ export const linkRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1),
         to: z.string().min(1),
+        position: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -42,6 +43,7 @@ export const linkRouter = createTRPCRouter({
           authorId: ctx.userId,
           name: input.name,
           to: input.to,
+          position: input.position,
         },
       });
     }),
@@ -75,6 +77,22 @@ export const linkRouter = createTRPCRouter({
       return ctx.prisma.link.update({
         where: { id: input.id },
         data,
+      });
+    }),
+
+  setIsActive: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        isActive: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.link.update({
+        where: { id: input.id },
+        data: {
+          isActive: input.isActive,
+        },
       });
     }),
 });
