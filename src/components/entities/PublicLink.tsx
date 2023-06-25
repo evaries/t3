@@ -1,6 +1,8 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import ShareIconLinks from "../shared/ShareIconLinks";
+import toast from "react-simple-toasts";
+import { virgil } from "y/utils/consts";
 
 export type PublicLinkProps = {
   name: string;
@@ -17,7 +19,9 @@ const PublicLink: NextPage<PublicLinkProps> = ({ name, href }) => {
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
-              console.log("copied", href);
+              toast("Link copied!", {
+                className: `${virgil.variable} font-sans`,
+              });
             }}
             className="absolute right-5 "
           >
