@@ -4,6 +4,8 @@ import { UserAvatar } from "y/components/shared/UserLogo";
 import { api } from "y/utils/api";
 import { useRouter } from "next/router";
 import ShareIconBox from "y/components/shared/ShareIconBox";
+import toast from "react-simple-toasts";
+import { virgil } from "y/utils/consts";
 
 export type NextPageWithLayout = NextPage & {
   Layout?: string;
@@ -39,7 +41,9 @@ const PublicPage: NextPageWithLayout = () => {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("copied", window.location.href);
+            toast("Profile copied!", {
+              className: `${virgil.variable} font-sans`,
+            });
           }}
           className="absolute right-0 top-0"
         >

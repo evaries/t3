@@ -5,6 +5,12 @@ import Layout from "y/components/Layout";
 import type { NextComponentType, NextPageContext } from "next";
 import type { AppProps } from "next/app";
 import PublicLayout from "y/components/PublicLayout";
+import "react-simple-toasts/dist/theme/dark.css";
+import { toastConfig } from "react-simple-toasts";
+
+toastConfig({
+  theme: "dark",
+});
 
 export type MyAppProps = AppProps & {
   Component: NextComponentType<NextPageContext, any, any> & {
