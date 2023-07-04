@@ -6,6 +6,8 @@ import EditIcon from "y/components/shared/EditIcon";
 import { useState } from "react";
 import OkIcon from "y/components/shared/OkIcon";
 import { useUser } from "@clerk/nextjs";
+import { UploadButton } from "y/utils/uploadthing";
+import "@uploadthing/react/styles.css";
 
 const Links = () => {
   const ctx = api.useContext();
@@ -56,6 +58,18 @@ const Links = () => {
     <main className="flex w-full flex-col items-center justify-center bg-gray-100 px-6 lg:w-1/2">
       <div className="mb-2">
         <UserAvatar url={clerkUser.user?.profileImageUrl ?? ""} />
+        <div className="flex flex-col items-center justify-between p-24">
+          <UploadButton
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              console.log("Files: ", res);
+              alert("Upload Completed");
+            }}
+            onUploadError={(error: Error) => {
+              alert(`ERROR! ${error.message}`);
+            }}
+          />
+        </div>
       </div>
       <div className="mb-2 flex flex-row">
         <div className="centered max-h-100px mb-5 flex-row ">
