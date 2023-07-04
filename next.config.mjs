@@ -8,9 +8,10 @@ await import("./src/env.mjs");
 const config = {
   reactStrictMode: true,
   experimental: {
+    esmExternals: false,
     swcPlugins: [
       [
-        'next-superjson-plugin',
+        "next-superjson-plugin",
         {
           excluded: [],
         },
