@@ -15,6 +15,7 @@ export default withClerkMiddleware((req: NextRequest) => {
   }
   const { userId } = getAuth(req);
 
+  console.log("userid", userId);
   if (!userId) {
     const signInUrl = new URL("/", req.url);
     // signInUrl.searchParams.set("redirect_url", req.url);
@@ -25,5 +26,5 @@ export default withClerkMiddleware((req: NextRequest) => {
 
 // Stop Middleware running on static files
 export const config = {
-  matcher: "/((?!_next/image|_next/static|favicon.ico).*)",
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
