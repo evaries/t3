@@ -1,8 +1,10 @@
 import type { NextPage } from "next";
-export const UserAvatar: NextPage<{ url: string }> = ({ url }) => {
+export const UserAvatar: NextPage<{ username?: string }> = ({ username = '' }) => {
+  console.log(username);
+
   return (
     <div className="centered max-h-100px mb-5 ">
-      <img className="h-10 w-10 rounded-full" src={url} alt="Rounded avatar" />
+      <div className="flex items-center justify-center text-3xl rounded-full h-16 w-16 bg-gray-300 text-gray-700">{username[0]}</div>
     </div>
   );
 };

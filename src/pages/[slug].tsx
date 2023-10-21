@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import ShareIconBox from "y/components/shared/ShareIconBox";
 import toast from "react-simple-toasts";
 import { virgil } from "y/utils/consts";
+import { copyToClipboard } from "y/utils/utils";
 
 export type NextPageWithLayout = NextPage & {
   Layout?: string;
@@ -14,33 +15,34 @@ export type NextPageWithLayout = NextPage & {
 const PublicPage: NextPageWithLayout = () => {
   const router = useRouter();
   const slug = router.query.slug;
+
   //TODO: add handlers here
   if (!slug) return <div>slug</div>;
+
   if (Array.isArray(slug)) return <div>slug</div>;
+
   const { data: user, isLoading } = api.user.getUserByUsername.useQuery({
     id: slug,
   });
 
-  if (isLoading) return <div className="centered">Loading...</div>;
+  if (isLoading) return <div className="centered h-screen">Loading...</div>;
 
   if (!user)
     return (
-      <div className="centered">
+      <div className="centered h-screen">
         <div>Username does not exist</div>
       </div>
     );
-  //TODO: find more elegant way to deal with prisma's json
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const avatar = JSON.parse(JSON.stringify(user.attributes))
-    .image_url as string;
+
   return (
     <div className="centered h-screen">
       <div className="relative w-80">
-        <UserAvatar url={avatar} />
+        <UserAvatar username={user.username} />
         <div
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+            copyToClipboard(window.location.href);
             toast("Profile copied!", {
               className: `${virgil.variable} font-sans`,
             });
