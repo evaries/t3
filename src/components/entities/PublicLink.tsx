@@ -3,6 +3,7 @@ import Link from "next/link";
 import ShareIconLinks from "../shared/ShareIconLinks";
 import toast from "react-simple-toasts";
 import { virgil } from "y/utils/consts";
+import { copyToClipboard } from "y/utils/utils";
 
 export type PublicLinkProps = {
   name: string;
@@ -19,6 +20,7 @@ const PublicLink: NextPage<PublicLinkProps> = ({ name, href }) => {
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
+              copyToClipboard(href);
               toast("Link copied!", {
                 className: `${virgil.variable} font-sans`,
               });

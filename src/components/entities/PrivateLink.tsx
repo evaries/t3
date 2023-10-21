@@ -97,9 +97,8 @@ const Row: NextPage<RowProps> = ({ name, value, id }) => {
         <div className="ml-2">{name}:</div>
         <div className="ml-2">
           <input
-            className={`w-auto rounded bg-transparent outline-none ${
-              isEditing ? "outline-gray-500" : ""
-            }`}
+            className={`w-auto rounded bg-transparent outline-none ${isEditing ? "outline-gray-500" : ""
+              }`}
             type="text"
             disabled={!isEditing}
             value={data}

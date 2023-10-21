@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from "react";
-import { api } from "y/utils/api";
-import PrivateLink from "y/components/entities/PrivateLink";
-import { UserAvatar } from "y/components/shared/UserLogo";
-import EditIcon from "y/components/shared/EditIcon";
-import { useState } from "react";
-import OkIcon from "y/components/shared/OkIcon";
 import { useUser } from "@clerk/nextjs";
+import { log } from "console";
+import React, { useEffect, useRef, useState } from "react";
+import PrivateLink from "y/components/entities/PrivateLink";
+import EditIcon from "y/components/shared/EditIcon";
+import OkIcon from "y/components/shared/OkIcon";
+import { UserAvatar } from "y/components/shared/UserLogo";
+import { api } from "y/utils/api";
 
 const Links = () => {
   const ctx = api.useContext();
@@ -17,6 +17,8 @@ const Links = () => {
   } = api.user.getCurrentUser.useQuery();
   const [username, setUsername] = useState<string>(user?.username ?? "");
   const [isEditing, setIsEditing] = useState(false);
+  const publicLink = useRef<string | null>(null)
+
   const { data } = api.link.getAllUserLinks.useQuery();
   const ref = useRef<HTMLInputElement>(null);
 
@@ -28,6 +30,7 @@ const Links = () => {
 
   useEffect(() => {
     setUsername(user?.username ?? "");
+    publicLink.current = window.location.origin + "/" + user?.username
   }, [isFetched]);
 
   useEffect(() => {
@@ -51,11 +54,10 @@ const Links = () => {
     }
     setIsEditing(!isEditing);
   };
-
   return (
     <main className="flex w-full flex-col items-center justify-center bg-gray-100 px-6 lg:w-1/2">
       <div className="mb-2">
-        <UserAvatar url={clerkUser.user?.profileImageUrl ?? ""} />
+        <UserAvatar username={username ?? ""} />
       </div>
       <div className="mb-2 flex flex-row">
         <div className="centered max-h-100px mb-5 flex-row ">
@@ -68,9 +70,8 @@ const Links = () => {
                 ? String(ref.current.value.length) + "ch"
                 : "auto",
             }}
-            className={`w-max rounded bg-transparent outline-none ${
-              isEditing ? "outline-gray-500" : ""
-            }`}
+            className={`w-max rounded bg-transparent outline-none ${isEditing ? "outline-gray-500" : ""
+              }`}
             ref={ref}
             id="username"
             name="username"
@@ -90,7 +91,8 @@ const Links = () => {
         return <PrivateLink key={link.id} link={link} />;
       })}
       <br />
-      <button onClick={createEmptyLink}>add</button>
+      <button className="px-3 py-1 border-2 rounded-md border-gray-500" onClick={createEmptyLink}>add</button>
+      <a href={publicLink.current ?? ''} target="_blank" className="mt-3">see public profile</a>
     </main>
   );
 };
