@@ -17,7 +17,7 @@ const Links = () => {
   } = api.user.getCurrentUser.useQuery();
   const [username, setUsername] = useState<string>(user?.username ?? "");
   const [isEditing, setIsEditing] = useState(false);
-  const publicLink = useRef<string | null>(null)
+  const publicLink = useRef<string | null>(null);
 
   const { data } = api.link.getAllUserLinks.useQuery();
   const ref = useRef<HTMLInputElement>(null);
@@ -30,7 +30,9 @@ const Links = () => {
 
   useEffect(() => {
     setUsername(user?.username ?? "");
-    publicLink.current = window.location.origin + "/" + user?.username
+    if (user) {
+      publicLink.current = `${window.location.origin}/${user.username}`;
+    }
   }, [isFetched]);
 
   useEffect(() => {
@@ -91,8 +93,15 @@ const Links = () => {
         return <PrivateLink key={link.id} link={link} />;
       })}
       <br />
-      <button className="px-3 py-1 border-2 rounded-md border-gray-500" onClick={createEmptyLink}>add</button>
-      <a href={publicLink.current ?? ''} target="_blank" className="mt-3">see public profile</a>
+      <button
+        className="rounded-md border-2 border-gray-500 px-3 py-1"
+        onClick={createEmptyLink}
+      >
+        add
+      </button>
+      <a href={publicLink.current ?? ""} target="_blank" className="mt-3">
+        see public profile
+      </a>
     </main>
   );
 };
