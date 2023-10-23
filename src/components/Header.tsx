@@ -1,28 +1,24 @@
 import { useState } from "react";
 import { Dialog, Popover } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useUser, SignInButton } from "@clerk/clerk-react";
-import { useRouter } from "next/router";
-import { useClerk } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
+import { virgil } from "y/utils/consts";
+import Login from "./entities/Login";
+import Logout from "./entities/Logout";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isSignedIn } = useUser();
 
   return (
-    <header className="bg-white">
+    <header className="sticky top-0 bg-white">
       <nav
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
           <a href="#" className="-m-1.5 p-1.5">
-            <span className="sr-only">Your Company</span>
-            <img
-              className="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt=""
-            />
+            <div className="uppercase">logo</div>
           </a>
         </div>
         <div className="flex lg:hidden">
@@ -36,12 +32,15 @@ export default function Header() {
           </button>
         </div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+          <a href="#features" className="text-sm font-semibold leading-6 text-gray-900">
             Features
+          </a>
+          <a href="#how" className="text-sm font-semibold leading-6 text-gray-900">
+            How it works
           </a>
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          {!isSignedIn ? <SignIn /> : <SignOut />}
+          {!isSignedIn ? <Login /> : <Logout />}
         </div>
       </nav>
       <Dialog
@@ -51,15 +50,12 @@ export default function Header() {
         onClose={setMobileMenuOpen}
       >
         <div className="fixed inset-0 z-10" />
-        <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+        <Dialog.Panel
+          className={`${virgil.variable} fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 font-sans sm:max-w-sm sm:ring-1 sm:ring-gray-900/10`}
+        >
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
-              <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                alt=""
-              />
+              <div className="uppercase">logo</div>
             </a>
             <button
               type="button"
@@ -79,7 +75,7 @@ export default function Header() {
                 Features
               </a>
             </div>
-            <div className="py-6">{!isSignedIn ? <SignIn /> : <SignOut />}</div>
+            <div className="py-6">{!isSignedIn ? <Login /> : <Logout />}</div>
           </div>
         </Dialog.Panel>
       </Dialog>
@@ -87,31 +83,3 @@ export default function Header() {
   );
 }
 
-const SignIn = () => {
-  return (
-    <SignInButton redirectUrl="/dashboard">
-      <div className="cursor-pointer">
-        Log in <span aria-hidden="true">&rarr;</span>
-      </div>
-    </SignInButton>
-  );
-};
-
-const SignOut = () => {
-  const { signOut } = useClerk();
-  const router = useRouter();
-
-  return (
-    <div
-      onClick={() => {
-        void signOut();
-        void router.push("/");
-      }}
-    >
-      <div className="cursor-pointer">
-        {" "}
-        Log out <span aria-hidden="true">&rarr;</span>
-      </div>
-    </div>
-  );
-};

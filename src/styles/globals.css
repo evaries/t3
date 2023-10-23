@@ -2,8 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+}
+
 @layer components {
   .centered {
     @apply flex w-full items-center justify-center;
+  }
+  .section {
+    @apply h-[calc(100vh-80px)]
   }
 }
