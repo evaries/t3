@@ -67,12 +67,12 @@ export default function Header() {
             </button>
           </div>
           <div className="mt-6 flow-root">
-            <div className="-my-6 divide-y divide-gray-500/10">
-              <a
-                href="#"
-                className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-              >
+            <div onClick={() => setMobileMenuOpen(false)} className="flex flex-col">
+              <a href="#features" className="text-sm font-semibold leading-6 text-gray-900">
                 Features
+              </a>
+              <a href="#how" className="text-sm font-semibold leading-6 text-gray-900">
+                How it works
               </a>
             </div>
             <div className="py-6">{!isSignedIn ? <Login /> : <Logout />}</div>
