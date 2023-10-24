@@ -25,6 +25,15 @@ const Home: NextPage = () => {
         <title>share links</title>
         <meta name="description" content="share links" />
         <link rel="icon" href="/favicon.ico" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XDL9FRE62L"></script>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XDL9FRE62L');
+  `
+        }}></script>
       </Head>
       <main className="flex h-full w-full items-center justify-center">
         <div className="flex flex-col items-center ">
