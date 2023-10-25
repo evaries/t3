@@ -7,6 +7,7 @@ import type { AppProps } from "next/app";
 import PublicLayout from "y/components/PublicLayout";
 import "react-simple-toasts/dist/theme/dark.css";
 import { toastConfig } from "react-simple-toasts";
+import GoogleTagManager from "y/components/shared/GoogleTag";
 
 toastConfig({
   theme: "dark",
@@ -23,6 +24,7 @@ function MyApp({ Component, pageProps }: MyAppProps) {
   return (
     <ClerkProvider>
       <MainLayout>
+        <GoogleTagManager />
         <Component {...pageProps} />
       </MainLayout>
     </ClerkProvider>

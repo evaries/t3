@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 export const UserAvatar: NextPage<{ username?: string }> = ({ username = '' }) => {
-  console.log(username);
 
   return (
     <div className="centered max-h-100px mb-5 ">

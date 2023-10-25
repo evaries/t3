@@ -1,5 +1,4 @@
 import { useUser } from "@clerk/nextjs";
-import { log } from "console";
 import React, { useEffect, useRef, useState } from "react";
 import PrivateLink from "y/components/entities/PrivateLink";
 import EditIcon from "y/components/shared/EditIcon";
