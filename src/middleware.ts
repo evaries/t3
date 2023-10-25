@@ -15,7 +15,6 @@ export default withClerkMiddleware((req: NextRequest) => {
   }
   const { userId } = getAuth(req);
 
-  console.log("userid", userId);
   if (!userId) {
     const signInUrl = new URL("/", req.url);
     // signInUrl.searchParams.set("redirect_url", req.url);
