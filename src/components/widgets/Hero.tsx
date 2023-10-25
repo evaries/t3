@@ -39,7 +39,7 @@ const Hero: NextPage = () => {
       <h1 className="font-bold text-center  mb-5 text-4xl md:text-6xl sm:text-5xl ">Share your link easily</h1>
       <h3 className=" text-center mb-6 text-sm md:text-3xl sm:text-2xl" >Keep multiple links in one place. Share one.</h3>
       <div className="centered items-start" >
-        <div>
+        <div className="max-w-[360px] w-full">
           <div className="flex py-[2px] px-3 rounded border-2 border-grey-500">
             <span>{origin}/</span>
             <input
@@ -51,7 +51,7 @@ const Hero: NextPage = () => {
               }}
             />
           </div>
-          <span className={`${usernameValiation !== 'valid' ? "visible" : "invisible"} block min-h-[40px] text-sm text-red-500`}>{validationErrorText(usernameValiation)}</span>
+          <span className={`${usernameValiation !== 'valid' ? "visible" : "invisible"} block min-h-[40px]  text-sm text-red-500`}>{validationErrorText(usernameValiation)}</span>
         </div>
         <button
           className="ml-3 sm:ml-6 py-[2px] px-3 rounded border-2 border-gray-500 whitespace-nowrap"
