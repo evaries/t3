@@ -6,9 +6,9 @@ import { api } from "y/utils/api";
 import Landing from "y/components/pages/Landing";
 import { useSession } from "next-auth/react";
 
-const Home: NextPage = (props) => {
+const Home: NextPage = () => {
   const { push } = useRouter();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const isAuth = status === "authenticated";
   const { data } = api.user.getCurrentUser.useQuery();
 
@@ -28,7 +28,7 @@ const Home: NextPage = (props) => {
       </Head>
       <main className="flex h-full w-full items-center justify-center">
         <div className="flex flex-col items-center ">
-          <div>Hello {session?.user.name}! Looks great today!</div>
+          <div>Hello {data?.name}! Looks great today!</div>
           <div className="mt-3 flex ">
             <button
               onClick={(e) => {

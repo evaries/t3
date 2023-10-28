@@ -5,13 +5,9 @@ import OkIcon from "y/components/shared/OkIcon";
 import { UserAvatar } from "y/components/shared/UserLogo";
 import { api } from "y/utils/api";
 
-const Links: React.FC = () => {
+const Links: React.FC = (props) => {
   const ctx = api.useContext();
-  const {
-    data: user,
-    isLoading,
-    isFetched,
-  } = api.user.getCurrentUser.useQuery();
+  const { data: user, isFetched } = api.user.getCurrentUser.useQuery();
   const [username, setUsername] = useState<string>(user?.username ?? "");
   const [isEditing, setIsEditing] = useState(false);
   const publicLink = useRef<string | null>(null);
@@ -30,11 +26,7 @@ const Links: React.FC = () => {
     if (user) {
       publicLink.current = `${window.location.origin}/${user.username}`;
     }
-  }, [isFetched]);
-
-  useEffect(() => {
-    setUsername(user?.username ?? "");
-  }, [user?.username]);
+  }, [isFetched, user?.username]);
 
   const { mutate: updateUsername } = api.user.updateUsername.useMutation({
     onSuccess: () => {

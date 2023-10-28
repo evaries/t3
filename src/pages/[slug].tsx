@@ -12,7 +12,7 @@ export type NextPageWithLayout = NextPage & {
   Layout?: string;
 };
 
-const PublicPage: NextPageWithLayout = (props) => {
+const PublicPage: NextPageWithLayout = () => {
   const router = useRouter();
   const slug = router.query.slug;
 

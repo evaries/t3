@@ -7,20 +7,19 @@ import PublicLayout from "y/components/PublicLayout";
 import "react-simple-toasts/dist/theme/dark.css";
 import { toastConfig } from "react-simple-toasts";
 import GoogleTagManager from "y/components/shared/GoogleTag";
-import { SessionProvider } from "next-auth/react"
-import { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
+import type { Session } from "next-auth";
 
 toastConfig({
   theme: "dark",
 });
 
 export type MyAppProps = AppProps & {
-  session: Session,
+  session: Session;
   Component: NextComponentType<NextPageContext, any, any> & {
-    Layout: string,
+    Layout: string;
   };
-
-}
+};
 
 function MyApp({ Component, session, pageProps }: MyAppProps) {
   const MainLayout = Component.Layout === "public" ? PublicLayout : Layout;

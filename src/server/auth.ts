@@ -6,7 +6,6 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-
 import { env } from "y/env.mjs";
 import { db } from "y/server/db";
 
@@ -35,3 +34,18 @@ export const getServerAuthSession = (ctx: {
 }) => {
   return getServerSession(ctx.req, ctx.res, authOptions);
 };
+
+declare module "next-auth" {
+  interface Session extends DefaultSession {
+    user: DefaultSession["user"] & {
+      id: string;
+      // ...other properties
+      // role: UserRole;
+    };
+  }
+
+  // interface User {
+  //   // ...other properties
+  //   // role: UserRole;
+  // }
+}
