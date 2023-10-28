@@ -1,11 +1,11 @@
-import { SignInButton } from "@clerk/clerk-react";
-const Login = () => {
+import { signIn } from "next-auth/react";
+const Login: React.FC = () => {
   return (
-    <SignInButton redirectUrl="/dashboard">
-      <div className="cursor-pointer">
-        Log in <span aria-hidden="true">&rarr;</span>
-      </div>
-    </SignInButton>
+    <button
+      onClick={() => void signIn("google", { callbackUrl: "/dashboard" })}
+    >
+      Login <span aria-hidden="true">&rarr;</span>
+    </button>
   );
 };
 export default Login;

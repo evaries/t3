@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { type NextPage } from "next";
 const features = [
   {
     header: "All in one",
@@ -21,7 +21,7 @@ const features = [
 const Features: NextPage = () => {
   return (
     <div id="features" className="section centered flex-col">
-      <h3 className="text-3xl mb-8">Features</h3>
+      <h3 className="mb-8 text-3xl">Features</h3>
       <div className="flex flex-wrap justify-center">
         {features.map((feature) => {
           return (
@@ -45,9 +45,9 @@ export type FeatureProps = {
 const Feature: React.FC<FeatureProps> = ({ text, header }) => {
   return (
     <div className="max-w-sm p-4 ">
-      <div className="flex h-full flex-col rounded-lg bg-grey-400 p-8 dark:bg-gray-50 shadow-grey-200 shadow-md ">
+      <div className="bg-grey-400 shadow-grey-200 flex h-full flex-col rounded-lg p-8 shadow-md dark:bg-gray-50 ">
         <div className="mb-3 flex items-center">
-          <h2 className="text-2xl font-bold text-grey-800 dark:text-grey-800">
+          <h2 className="text-grey-800 dark:text-grey-800 text-2xl font-bold">
             {header}
           </h2>
         </div>

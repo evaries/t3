@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import type { NextPage } from "next";
 
 const Toggle: NextPage<{ isActive: boolean }> = ({ isActive }) => {
   return (
@@ -6,7 +6,7 @@ const Toggle: NextPage<{ isActive: boolean }> = ({ isActive }) => {
       <input
         type="checkbox"
         value=""
-        checked={isActive}
+        defaultChecked={isActive}
         className="peer sr-only"
       />
       <div

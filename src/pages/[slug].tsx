@@ -52,9 +52,11 @@ const PublicPage: NextPageWithLayout = () => {
           <ShareIconBox />
         </div>
         <div className="my-2 flex justify-center">{`@${user.username}`}</div>
-        {user.Link.filter((link) => link.isActive).map((link) => (
-          <PublicLink href={link.to} name={link.name} key={link.id} />
-        ))}
+        {user.links
+          .filter((link) => link.isActive)
+          .map((link) => (
+            <PublicLink href={link.to} name={link.name} key={link.id} />
+          ))}
       </div>
     </div>
   );

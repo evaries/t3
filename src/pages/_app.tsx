@@ -1,6 +1,5 @@
 import { api } from "y/utils/api";
 import "y/styles/globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
 import Layout from "y/components/Layout";
 import type { NextComponentType, NextPageContext } from "next";
 import type { AppProps } from "next/app";
@@ -8,26 +7,29 @@ import PublicLayout from "y/components/PublicLayout";
 import "react-simple-toasts/dist/theme/dark.css";
 import { toastConfig } from "react-simple-toasts";
 import GoogleTagManager from "y/components/shared/GoogleTag";
+import { SessionProvider } from "next-auth/react";
+import type { Session } from "next-auth";
 
 toastConfig({
   theme: "dark",
 });
 
 export type MyAppProps = AppProps & {
+  session: Session;
   Component: NextComponentType<NextPageContext, any, any> & {
     Layout: string;
   };
 };
 
-function MyApp({ Component, pageProps }: MyAppProps) {
+function MyApp({ Component, session, pageProps }: MyAppProps) {
   const MainLayout = Component.Layout === "public" ? PublicLayout : Layout;
   return (
-    <ClerkProvider>
+    <SessionProvider session={session}>
       <MainLayout>
         <GoogleTagManager />
         <Component {...pageProps} />
       </MainLayout>
-    </ClerkProvider>
+    </SessionProvider>
   );
 }
 export default api.withTRPC(MyApp);

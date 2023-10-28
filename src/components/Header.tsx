@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { Dialog, Popover } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useUser } from "@clerk/clerk-react";
 import { virgil } from "y/utils/consts";
 import Login from "./entities/Login";
 import Logout from "./entities/Logout";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isSignedIn } = useUser();
+  const { status } = useSession();
+  const router = useRouter();
 
   return (
     <header className="sticky top-0 bg-white">
@@ -32,15 +35,21 @@ export default function Header() {
           </button>
         </div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
-          <a href="#features" className="text-sm font-semibold leading-6 text-gray-900">
+          <Link
+            href={`${router.basePath}/#features`}
+            className="text-sm font-semibold leading-6 text-gray-900"
+          >
             Features
-          </a>
-          <a href="#how" className="text-sm font-semibold leading-6 text-gray-900">
+          </Link>
+          <Link
+            href={`${router.basePath}/#how`}
+            className="text-sm font-semibold leading-6 text-gray-900"
+          >
             How it works
-          </a>
+          </Link>
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          {!isSignedIn ? <Login /> : <Logout />}
+          {status === "unauthenticated" ? <Login /> : <Logout />}
         </div>
       </nav>
       <Dialog
@@ -67,19 +76,29 @@ export default function Header() {
             </button>
           </div>
           <div className="mt-6 flow-root">
-            <div onClick={() => setMobileMenuOpen(false)} className="flex flex-col">
-              <a href="#features" className="text-sm font-semibold leading-6 text-gray-900">
+            <div
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex flex-col"
+            >
+              <a
+                href="#features"
+                className="text-sm font-semibold leading-6 text-gray-900"
+              >
                 Features
               </a>
-              <a href="#how" className="text-sm font-semibold leading-6 text-gray-900">
+              <a
+                href="#how"
+                className="text-sm font-semibold leading-6 text-gray-900"
+              >
                 How it works
               </a>
             </div>
-            <div className="py-6">{!isSignedIn ? <Login /> : <Logout />}</div>
+            <div className="py-6">
+              {status === "unauthenticated" ? <Login /> : <Logout />}
+            </div>
           </div>
         </Dialog.Panel>
       </Dialog>
     </header>
   );
 }
-

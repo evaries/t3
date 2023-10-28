@@ -1,34 +1,33 @@
 import { z } from "zod";
-
 import {
   createTRPCRouter,
-  privateProcedure,
+  protectedProcedure,
   publicProcedure,
 } from "y/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
-  getCurrentUser: privateProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.user.findFirst({
+  getCurrentUser: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.user.findFirst({
       where: {
-        clerkId: ctx.userId,
+        id: ctx.session.user.id,
       },
     });
   }),
 
   getAllUsers: publicProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.user.findMany();
+    return ctx.db.user.findMany();
   }),
 
-  updateUsername: privateProcedure
+  updateUsername: protectedProcedure
     .input(
       z.object({
         username: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.user.update({
+      return ctx.db.user.update({
         where: {
-          clerkId: ctx.userId,
+          id: ctx.session.user.id,
         },
         data: {
           username: input.username,
@@ -43,12 +42,12 @@ export const userRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      return ctx.prisma.user.findFirst({
+      return ctx.db.user.findFirst({
         where: {
           username: input.id,
         },
         include: {
-          Link: true,
+          links: true,
         },
       });
     }),
