@@ -1,24 +1,23 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import React from "react";
-import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import { api } from "y/utils/api";
 import Landing from "y/components/pages/Landing";
-import Script from "next/script";
+import { useSession } from "next-auth/react";
 
-const Home: NextPage = () => {
-  const { isSignedIn, user } = useUser();
+const Home: NextPage = (props) => {
   const { push } = useRouter();
+  const { data: session, status } = useSession();
+  const isAuth = status === "authenticated";
+  const { data } = api.user.getCurrentUser.useQuery();
 
-  if (!isSignedIn)
+  if (!isAuth)
     return (
       <main className="flex h-full w-full items-center justify-center">
         <Landing />
       </main>
     );
-
-  const { data } = api.user.getCurrentUser.useQuery();
 
   return (
     <>
@@ -29,7 +28,7 @@ const Home: NextPage = () => {
       </Head>
       <main className="flex h-full w-full items-center justify-center">
         <div className="flex flex-col items-center ">
-          <div>Hello {user.firstName}! Looks great today!</div>
+          <div>Hello {session?.user.name}! Looks great today!</div>
           <div className="mt-3 flex ">
             <button
               onClick={(e) => {

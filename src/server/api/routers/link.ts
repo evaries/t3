@@ -1,35 +1,34 @@
 import { z } from "zod";
-
 import {
   createTRPCRouter,
-  privateProcedure,
+  protectedProcedure,
   publicProcedure,
 } from "y/server/api/trpc";
 
 export const linkRouter = createTRPCRouter({
   getAllLinks: publicProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.link.findMany();
+    return ctx.db.link.findMany();
   }),
 
-  getAllUserLinks: privateProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.link.findMany({
-      where: { authorId: ctx.userId },
+  getAllUserLinks: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.link.findMany({
+      where: { authorId: ctx.session.user.id },
     });
   }),
 
-  getLinksByUserId: privateProcedure
+  getLinksByUserId: protectedProcedure
     .input(
       z.object({
         id: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
-      return ctx.prisma.link.findMany({
+      return ctx.db.link.findMany({
         where: { authorId: input.id },
       });
     }),
 
-  createLink: privateProcedure
+  createLink: protectedProcedure
     .input(
       z.object({
         name: z.string().min(1),
@@ -38,29 +37,30 @@ export const linkRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.link.create({
+      return ctx.db.link.create({
         data: {
-          authorId: ctx.userId,
+          authorId: ctx.session.user.id,
           name: input.name,
           to: input.to,
           position: input.position,
+          userId: ctx.session.user.id,
         },
       });
     }),
 
-  deleteLink: privateProcedure
+  deleteLink: protectedProcedure
     .input(
       z.object({
         id: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.link.delete({
+      return ctx.db.link.delete({
         where: { id: input.id },
       });
     }),
 
-  updateLink: privateProcedure
+  updateLink: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -70,17 +70,17 @@ export const linkRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const data = {
-        authorId: ctx.userId,
+        authorId: ctx.session.user.id,
         ...(input.name && { name: input.name }),
         ...(input.to && { to: input.to }),
       };
-      return ctx.prisma.link.update({
+      return ctx.db.link.update({
         where: { id: input.id },
         data,
       });
     }),
 
-  setIsActive: privateProcedure
+  setIsActive: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -88,7 +88,7 @@ export const linkRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.link.update({
+      return ctx.db.link.update({
         where: { id: input.id },
         data: {
           isActive: input.isActive,

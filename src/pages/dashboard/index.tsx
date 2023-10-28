@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/nextjs";
 import React, { useEffect, useRef, useState } from "react";
 import PrivateLink from "y/components/entities/PrivateLink";
 import EditIcon from "y/components/shared/EditIcon";
@@ -6,9 +5,8 @@ import OkIcon from "y/components/shared/OkIcon";
 import { UserAvatar } from "y/components/shared/UserLogo";
 import { api } from "y/utils/api";
 
-const Links = () => {
+const Links: React.FC = () => {
   const ctx = api.useContext();
-  const clerkUser = useUser();
   const {
     data: user,
     isLoading,
@@ -71,8 +69,9 @@ const Links = () => {
                 ? String(ref.current.value.length) + "ch"
                 : "auto",
             }}
-            className={`w-max rounded bg-transparent outline-none ${isEditing ? "outline-gray-500" : ""
-              }`}
+            className={`w-max rounded bg-transparent outline-none ${
+              isEditing ? "outline-gray-500" : ""
+            }`}
             ref={ref}
             id="username"
             name="username"

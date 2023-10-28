@@ -1,23 +1,15 @@
-import { useClerk } from "@clerk/nextjs";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 
 const Logout = () => {
-  const { signOut } = useClerk();
-  const router = useRouter();
-
   return (
-    <div
-      onClick={() => {
-        void signOut();
-        void router.push("/");
-      }}
-    >
+    <div onClick={() => signOut({ callbackUrl: "/" })}>
       <div className="cursor-pointer">
         {" "}
-        Log out <span aria-hidden="true">&rarr;</span>
+        Logout <span aria-hidden="true">&rarr;</span>
       </div>
     </div>
   );
 };
 
-export default Logout
+export default Logout;

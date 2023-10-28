@@ -6,7 +6,7 @@ const Toggle: NextPage<{ isActive: boolean }> = ({ isActive }) => {
       <input
         type="checkbox"
         value=""
-        checked={isActive}
+        defaultChecked={isActive}
         className="peer sr-only"
       />
       <div
