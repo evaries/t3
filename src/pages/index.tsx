@@ -10,7 +10,16 @@ const Home: NextPage = () => {
   const { push } = useRouter();
   const { status } = useSession();
   const isAuth = status === "authenticated";
+  const isLoading = status === "loading";
   const { data } = api.user.getCurrentUser.useQuery();
+
+  if (isLoading) {
+    return (
+      <main className="flex h-full w-full items-center justify-center">
+        Loading...
+      </main>
+    );
+  }
 
   if (!isAuth)
     return (
