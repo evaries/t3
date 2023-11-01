@@ -1,15 +1,29 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { type CSSProperties, useEffect, useRef, useState } from "react";
 import PrivateLink from "y/components/entities/PrivateLink";
 import EditIcon from "y/components/shared/EditIcon";
 import OkIcon from "y/components/shared/OkIcon";
 import { UserAvatar } from "y/components/shared/UserLogo";
 import { api } from "y/utils/api";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetSessionParams, getSession } from "next-auth/react";
+import { Session } from "next-auth";
+import { useRouter } from "next/router";
 
-const Links: React.FC = (props) => {
+export type LinksProps = {
+  session: Session;
+  desirableUsername: string | undefined;
+};
+
+const Links: React.FC<LinksProps> = ({
+  session,
+  desirableUsername,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const ctx = api.useContext();
+  const router = useRouter();
   const { data: user, isFetched } = api.user.getCurrentUser.useQuery();
-  const [username, setUsername] = useState<string>(user?.username ?? "");
+  const [username, setUsername] = useState<string | undefined>();
   const [isEditing, setIsEditing] = useState(false);
+  const [inputStyle, setInputStyle] = useState<CSSProperties>({});
   const publicLink = useRef<string | null>(null);
 
   const { data } = api.link.getAllUserLinks.useQuery();
@@ -22,15 +36,33 @@ const Links: React.FC = (props) => {
   });
 
   useEffect(() => {
-    setUsername(user?.username ?? "");
-    if (user) {
-      publicLink.current = `${window.location.origin}/${user.username}`;
+    if (!isFetched) return;
+    if (desirableUsername) {
+      updateUsername({ username: desirableUsername });
+      setUsername(desirableUsername);
+      void router.replace(location.pathname, undefined, { shallow: true });
+      return;
     }
-  }, [isFetched, user?.username]);
+    if (user) {
+      if (!user.username) {
+        updateUsername({ username: session.user.id });
+        setUsername(session.user.id);
+      }
+      setUsername(user.username);
+    }
+  }, [isFetched]);
+
+  useEffect(() => {
+    inputStyles();
+  }, [username?.length]);
 
   const { mutate: updateUsername } = api.user.updateUsername.useMutation({
     onSuccess: () => {
+      setUsername(desirableUsername ? desirableUsername : username);
       void ctx.user.getCurrentUser.invalidate();
+      if (username) {
+        publicLink.current = `${window.location.origin}/${username}`;
+      }
     },
   });
 
@@ -41,9 +73,16 @@ const Links: React.FC = (props) => {
 
   const editUsername = () => {
     if (isEditing) {
-      updateUsername({ username });
+      updateUsername({ username: username ?? "" });
+      setUsername(username);
     }
     setIsEditing(!isEditing);
+  };
+
+  const inputStyles = () => {
+    setInputStyle({
+      width: ref.current ? String(ref.current.value.length) + "ch" : "auto",
+    });
   };
   return (
     <main className="flex w-full flex-col items-center justify-center bg-gray-100 px-6 lg:w-1/2">
@@ -56,11 +95,7 @@ const Links: React.FC = (props) => {
             {isEditing ? <OkIcon /> : <EditIcon />}
           </div>
           <input
-            style={{
-              width: ref.current
-                ? String(ref.current.value.length) + "ch"
-                : "auto",
-            }}
+            style={inputStyle}
             className={`w-max rounded bg-transparent outline-none ${
               isEditing ? "outline-gray-500" : ""
             }`}
@@ -97,3 +132,27 @@ const Links: React.FC = (props) => {
 };
 
 export default Links;
+type ProfileData = {
+  session: Session;
+  desirableUsername?: string | undefined;
+};
+
+export const getServerSideProps: GetServerSideProps<ProfileData> = async (
+  context
+) => {
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  const desirableUsername = context.query.username
+    ? String(context.query.username)
+    : undefined;
+  return {
+    props: { session, desirableUsername },
+  };
+};

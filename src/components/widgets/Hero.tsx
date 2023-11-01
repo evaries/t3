@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { signIn } from "next-auth/react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { api } from "y/utils/api";
 import { type UsernameValidation } from "y/utils/types";
 import { validationErrorText } from "y/utils/utils";
@@ -7,7 +8,7 @@ import { validationErrorText } from "y/utils/utils";
 const Hero: NextPage = () => {
   const [origin, setOrigin] = useState<string>();
   const [username, setUsername] = useState<string>("");
-  const [usernameValiation, setUsernameValiation] =
+  const [usernameValidation, setUsernameValidation] =
     useState<UsernameValidation>("valid");
 
   useEffect(() => {
@@ -18,22 +19,29 @@ const Hero: NextPage = () => {
     id: username,
   });
 
-  const checkUsername = () => {
+  const checkUsername = async () => {
     if (!!user) {
-      setUsernameValiation("exist");
+      setUsernameValidation("exist");
       return;
     }
     const regex = /^[a-zA-Z0-9_]{3,20}$/;
     if (!regex.test(username)) {
-      setUsernameValiation("wrong");
+      setUsernameValidation("wrong");
       return;
     }
     if (error) {
-      setUsernameValiation("general");
+      setUsernameValidation("general");
       return;
     }
-    // const params = new URLSearchParams(searchParams)
+
+    await signIn("google", { callbackUrl: `/dashboard?username=${username}` });
   };
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setUsernameValidation("valid");
+    setUsername(e.target.value);
+  };
+
   return (
     <div id="hero" className="section centered flex-col px-4">
       <h1 className="mb-5 text-center  text-4xl font-bold sm:text-5xl md:text-6xl ">
@@ -47,28 +55,25 @@ const Hero: NextPage = () => {
           <div className="border-grey-500 flex rounded border-2 px-3 py-[2px]">
             <span>{origin}/</span>
             <input
-              className={`ml-1 bg-transparent focus:border-transparent focus:outline-none focus:ring-0 ${
-                usernameValiation !== "valid" ? "text-red-500" : ""
+              className={`ml-1 w-full bg-transparent focus:border-transparent focus:outline-none focus:ring-0 ${
+                usernameValidation !== "valid" ? "text-red-500" : ""
               } `}
               autoFocus
               value={username}
-              onChange={(e) => {
-                setUsernameValiation("valid");
-                setUsername(e.target.value);
-              }}
+              onChange={(e) => onChange(e)}
             />
           </div>
           <span
             className={`${
-              usernameValiation !== "valid" ? "visible" : "invisible"
+              usernameValidation !== "valid" ? "visible" : "invisible"
             } block min-h-[40px]  text-sm text-red-500`}
           >
-            {validationErrorText(usernameValiation)}
+            {validationErrorText(usernameValidation)}
           </span>
         </div>
         <button
           className="ml-3 whitespace-nowrap rounded border-2 border-gray-500 px-3 py-[2px] sm:ml-6"
-          onClick={checkUsername}
+          onClick={() => void checkUsername()}
         >
           get link
         </button>
