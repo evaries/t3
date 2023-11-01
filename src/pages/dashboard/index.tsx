@@ -45,8 +45,8 @@ const Links: React.FC<LinksProps> = ({
     }
     if (user) {
       if (!user.username) {
-        updateUsername({ username: session.user.id });
-        setUsername(session.user.id);
+        updateUsername({ username: session?.user.id ?? "" });
+        setUsername(session?.user.id ?? "");
       }
       setUsername(user.username);
     }
@@ -133,7 +133,7 @@ const Links: React.FC<LinksProps> = ({
 
 export default Links;
 type ProfileData = {
-  session: Session;
+  session?: Session | undefined;
   desirableUsername?: string | undefined;
 };
 
@@ -141,13 +141,15 @@ export const getServerSideProps: GetServerSideProps<ProfileData> = async (
   context
 ) => {
   const session = await getSession(context);
+  console.log("session", session);
   if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
+    return { props: { session: undefined, desirableUsername: "" } };
+    // return {
+    //   redirect: {
+    //     destination: "/",
+    //     permanent: false,
+    //   },
+    // };
   }
   const desirableUsername = context.query.username
     ? String(context.query.username)
