@@ -54,6 +54,7 @@ const Links: React.FC<LinksProps> = ({
 
   useEffect(() => {
     inputStyles();
+    publicLink.current = `${window.location.origin}/${username}`;
   }, [username?.length]);
 
   const { mutate: updateUsername } = api.user.updateUsername.useMutation({
