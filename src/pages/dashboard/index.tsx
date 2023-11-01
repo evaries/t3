@@ -144,20 +144,19 @@ export const getServerSideProps: GetServerSideProps<ProfileData> = async (
   context
 ) => {
   const session = await getSession(context);
-  console.log("session", session);
-  if (!session) {
-    return { props: { session: undefined, desirableUsername: "" } };
-    // return {
-    //   redirect: {
-    //     destination: "/",
-    //     permanent: false,
-    //   },
-    // };
-  }
+  // if (!session) {
+  //   return { props: { session: undefined, desirableUsername: "" } };
+  // return {
+  //   redirect: {
+  //     destination: "/",
+  //     permanent: false,
+  //   },
+  // };
+  // }
   const desirableUsername = context.query.username
     ? String(context.query.username)
     : undefined;
   return {
-    props: { session, desirableUsername },
+    props: { session: session ?? undefined, desirableUsername },
   };
 };
