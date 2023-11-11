@@ -5,9 +5,10 @@ import OkIcon from "y/components/shared/OkIcon";
 import { UserAvatar } from "y/components/shared/UserLogo";
 import { api } from "y/utils/api";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { GetSessionParams, getSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import { Session } from "next-auth";
-import { useRouter } from "next/router";
+import Loader from "y/components/shared/Loader";
+import Cookies from "universal-cookie";
 
 export type LinksProps = {
   session: Session;
@@ -19,7 +20,6 @@ const Links: React.FC<LinksProps> = ({
   desirableUsername,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const ctx = api.useContext();
-  const router = useRouter();
   const { data: user, isFetched } = api.user.getCurrentUser.useQuery();
   const [username, setUsername] = useState<string | undefined>();
   const [isEditing, setIsEditing] = useState(false);
@@ -29,7 +29,7 @@ const Links: React.FC<LinksProps> = ({
   const { data } = api.link.getAllUserLinks.useQuery();
   const ref = useRef<HTMLInputElement>(null);
 
-  const { mutate } = api.link.createLink.useMutation({
+  const { mutate, isLoading } = api.link.createLink.useMutation({
     onSuccess: () => {
       void ctx.link.getAllUserLinks.invalidate();
     },
@@ -40,7 +40,8 @@ const Links: React.FC<LinksProps> = ({
     if (desirableUsername) {
       updateUsername({ username: desirableUsername });
       setUsername(desirableUsername);
-      void router.replace(location.pathname, undefined, { shallow: true });
+      const cookies = new Cookies()
+      cookies.remove('username')
       return;
     }
     if (user) {
@@ -99,9 +100,8 @@ const Links: React.FC<LinksProps> = ({
           </div>
           <input
             style={inputStyle}
-            className={`w-max rounded bg-transparent outline-none ${
-              isEditing ? "outline-gray-500" : ""
-            }`}
+            className={`w-max rounded bg-transparent outline-none ${isEditing ? "outline-gray-500" : ""
+              }`}
             ref={ref}
             id="username"
             name="username"
@@ -121,12 +121,16 @@ const Links: React.FC<LinksProps> = ({
         return <PrivateLink key={link.id} link={link} />;
       })}
       <br />
-      <button
-        className="rounded-md border-2 border-gray-500 px-3 py-1"
-        onClick={createEmptyLink}
-      >
-        add
-      </button>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <button
+          className="rounded-md border-2 border-gray-500 px-3 py-1"
+          onClick={createEmptyLink}
+        >
+          add
+        </button>
+      )}
       <a href={publicLink.current ?? ""} target="_blank" className="mt-3">
         see public profile
       </a>
@@ -144,19 +148,12 @@ export const getServerSideProps: GetServerSideProps<ProfileData> = async (
   context
 ) => {
   const session = await getSession(context);
-  // if (!session) {
-  //   return { props: { session: undefined, desirableUsername: "" } };
-  // return {
-  //   redirect: {
-  //     destination: "/",
-  //     permanent: false,
-  //   },
-  // };
-  // }
-  const desirableUsername = context.query.username
-    ? String(context.query.username)
-    : undefined;
+  const cookies = new Cookies(context.req.headers.cookie);
+  const desirableUsername = cookies.get("username") ? String(cookies.get("username")) : undefined;
   return {
-    props: { session: session ?? undefined, desirableUsername },
+    props: {
+      session: session ?? undefined,
+      desirableUsername: desirableUsername,
+    },
   };
 };
