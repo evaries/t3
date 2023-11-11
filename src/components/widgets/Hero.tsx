@@ -1,11 +1,14 @@
 import type { NextPage } from "next";
-import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
 import { api } from "y/utils/api";
 import { type UsernameValidation } from "y/utils/types";
 import { validationErrorText } from "y/utils/utils";
+import Cookies from "universal-cookie";
+
 
 const Hero: NextPage = () => {
+  const router = useRouter()
   const [origin, setOrigin] = useState<string>();
   const [username, setUsername] = useState<string>("");
   const [usernameValidation, setUsernameValidation] =
@@ -19,7 +22,7 @@ const Hero: NextPage = () => {
     id: username,
   });
 
-  const checkUsername = async () => {
+  const checkUsername = () => {
     if (!!user) {
       setUsernameValidation("exist");
       return;
@@ -33,8 +36,9 @@ const Hero: NextPage = () => {
       setUsernameValidation("general");
       return;
     }
-
-    await signIn("google", { callbackUrl: `/dashboard?username=${username}` });
+    const cookies = new Cookies()
+    cookies.set('username', username)
+    void router.push('/auth/signin')
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -55,18 +59,15 @@ const Hero: NextPage = () => {
           <div className="border-grey-500 flex rounded border-2 px-3 py-[2px]">
             <span>{origin}/</span>
             <input
-              className={`ml-1 w-full bg-transparent focus:border-transparent focus:outline-none focus:ring-0 ${
-                usernameValidation !== "valid" ? "text-red-500" : ""
-              } `}
+              className={`ml-1 w-full bg-transparent focus:border-transparent focus:outline-none focus:ring-0 ${usernameValidation !== "valid" ? "text-red-500" : ""} `}
               autoFocus
               value={username}
               onChange={(e) => onChange(e)}
             />
           </div>
           <span
-            className={`${
-              usernameValidation !== "valid" ? "visible" : "invisible"
-            } block min-h-[40px]  text-sm text-red-500`}
+            className={`${usernameValidation !== "valid" ? "visible" : "invisible"
+              } block min - h - [40px]  text - sm text - red - 500`}
           >
             {validationErrorText(usernameValidation)}
           </span>
@@ -82,3 +83,4 @@ const Hero: NextPage = () => {
   );
 };
 export default Hero;
+

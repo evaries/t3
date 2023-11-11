@@ -5,13 +5,11 @@ import { virgil } from "y/utils/consts";
 import Login from "./entities/Login";
 import Logout from "./entities/Logout";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import Link from "next/link";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { status } = useSession();
-  const router = useRouter();
 
   return (
     <header className="sticky top-0 bg-white">
@@ -20,9 +18,9 @@ export default function Header() {
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
+          <Link href="/" className="-m-1.5 p-1.5">
             <div className="uppercase">logo</div>
-          </a>
+          </Link>
         </div>
         <div className="flex lg:hidden">
           <button
@@ -36,13 +34,13 @@ export default function Header() {
         </div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
           <Link
-            href={`${router.basePath}/#features`}
+            href={`/#features`}
             className="text-sm font-semibold leading-6 text-gray-900"
           >
             Features
           </Link>
           <Link
-            href={`${router.basePath}/#how`}
+            href={`/#how`}
             className="text-sm font-semibold leading-6 text-gray-900"
           >
             How it works

@@ -1,11 +1,11 @@
-import { signIn } from "next-auth/react";
+import Link from "next/link";
 const Login: React.FC = () => {
   return (
-    <button
-      onClick={() => void signIn("google", { callbackUrl: "/dashboard" })}
+    <Link
+      href="/auth/signin"
     >
       Login <span aria-hidden="true">&rarr;</span>
-    </button>
+    </Link>
   );
 };
 export default Login;

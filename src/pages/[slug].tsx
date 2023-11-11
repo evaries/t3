@@ -16,8 +16,7 @@ const PublicPage: NextPageWithLayout = () => {
   const router = useRouter();
   const slug = router.query.slug;
 
-  //TODO: add handlers here
-  if (!slug) return <div>slug</div>;
+  if (!slug) return <></>
 
   if (Array.isArray(slug)) return <div>slug</div>;
 
