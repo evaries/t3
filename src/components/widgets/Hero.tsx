@@ -67,7 +67,7 @@ const Hero: NextPage = () => {
           </div>
           <span
             className={`${usernameValidation !== "valid" ? "visible" : "invisible"
-              } block min - h - [40px]  text - sm text - red - 500`}
+              } block min-h-[40px]  text-sm text-red-500`}
           >
             {validationErrorText(usernameValidation)}
           </span>
