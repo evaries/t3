@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useState } from "react";
+import { type ChangeEvent, useEffect, useState } from "react";
 import { api } from "y/utils/api";
 import { type UsernameValidation } from "y/utils/types";
 import { validationErrorText } from "y/utils/utils";
