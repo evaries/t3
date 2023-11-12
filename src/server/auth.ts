@@ -19,12 +19,12 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
       },
     }),
-    // signIn: ({ user }) => {
-    //   if (user.id) {
-    //     return true;
-    //   }
-    //   return "/auth/signin";
-    // },
+    signIn: ({ user }) => {
+      if (user.id) {
+        return true;
+      }
+      return "/auth/signin";
+    },
   },
   pages: {
     signIn: "/auth/signin",
