@@ -2,7 +2,6 @@ import { getCsrfToken } from "next-auth/react";
 import { GetServerSideProps } from "next/types";
 import { signIn } from "next-auth/react";
 import { InferGetServerSidePropsType } from "next";
-import { useRef } from "react";
 
 export type SignInProps = {
   csrfToken: string | undefined;
@@ -12,15 +11,7 @@ export type SignInProps = {
 const SignIn: React.FC<SignInProps> = ({
   csrfToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-
-  const ref = useRef<HTMLInputElement>(null)
-  const submit = () => {
-    void signIn('email', {
-      callbackUrl: '/dashboard',
-      csrfToken: csrfToken ? String(csrfToken) : undefined,
-      email: ref.current ? String(ref.current.value) : undefined
-    })
-  }
+  console.log('csrfToken', csrfToken)
   return (
     <div className="flex h-screen flex-col bg-gray-100">
       <div className="mx-4 mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -55,13 +46,11 @@ const SignIn: React.FC<SignInProps> = ({
             </button>
           </div>
           <div className=" my-6 flex justify-center">------ or ------</div>
-          {/* <form method="post" action="/api/auth/signin/email"> */}
-          <form onSubmit={submit}>
+          <form method="post" action="/api/auth/signin/email">
             <input name="csrfToken" type="hidden" defaultValue={csrfToken ? String(csrfToken) : ''} />
             <label className="block text-sm font-semibold text-gray-900">
               Email address
               <input
-                ref={ref}
                 className="mt-2 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
                 type="text"
                 id="email"
