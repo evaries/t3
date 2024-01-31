@@ -1,17 +1,15 @@
-import { getCsrfToken } from "next-auth/react";
-import { GetServerSideProps } from "next/types";
-import { signIn } from "next-auth/react";
-import { InferGetServerSidePropsType } from "next";
+import { type GetServerSideProps } from "next/types";
+import { getCsrfToken, signIn } from "next-auth/react";
+import { type InferGetServerSidePropsType } from "next";
 
 export type SignInProps = {
   csrfToken: string | undefined;
   username: string | undefined;
-}
+};
 
 const SignIn: React.FC<SignInProps> = ({
   csrfToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  console.log('csrfToken', csrfToken)
   return (
     <div className="flex h-screen flex-col bg-gray-100">
       <div className="mx-4 mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -25,7 +23,9 @@ const SignIn: React.FC<SignInProps> = ({
             <button
               type="button"
               className="dark:focus:ring-[#4285F4]/55 mb-2 mr-2 inline-flex items-center rounded-lg bg-[#4285F4] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50"
-              onClick={() => void signIn("google", { callbackUrl: '/dashboard' })}
+              onClick={() =>
+                void signIn("google", { callbackUrl: "/dashboard" })
+              }
             >
               <svg
                 className="-ml-1 mr-2 h-4 w-4"
@@ -47,7 +47,11 @@ const SignIn: React.FC<SignInProps> = ({
           </div>
           <div className=" my-6 flex justify-center">------ or ------</div>
           <form method="post" action="/api/auth/signin/email">
-            <input name="csrfToken" type="hidden" defaultValue={csrfToken ? String(csrfToken) : ''} />
+            <input
+              name="csrfToken"
+              type="hidden"
+              defaultValue={csrfToken ? String(csrfToken) : ""}
+            />
             <label className="block text-sm font-semibold text-gray-900">
               Email address
               <input
@@ -80,4 +84,3 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
   };
 };
-

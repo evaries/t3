@@ -36,10 +36,6 @@ export const authOptions: NextAuthOptions = {
       clientId: env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: env.GOOGLE_CLIENT_SECRET ?? "",
     }),
-    // FacebookProvider({
-    //   clientId: process.env.FACEBOOK_CLIENT_ID ?? '',
-    //   clientSecret: process.env.FACEBOOK_CLIENT_SECRET ?? ''
-    // }),
     Email({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
