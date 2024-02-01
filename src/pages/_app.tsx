@@ -9,6 +9,7 @@ import { toastConfig } from "react-simple-toasts";
 import GoogleTagManager from "y/components/shared/GoogleTag";
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
+import { GeistSans } from "geist/font/sans";
 
 toastConfig({
   theme: "dark",

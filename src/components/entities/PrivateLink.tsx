@@ -1,17 +1,23 @@
-import { useState } from "react";
-import type { NextPage } from "next";
-import DeleteIcon from "../shared/DeleteIcon";
-import EditIcon from "../shared/EditIcon";
-import OkIcon from "../shared/OkIcon";
-import Toggle from "../shared/Toggle";
-import { api } from "y/utils/api";
 import type { Link } from "@prisma/client";
+import type { NextPage } from "next";
+import * as React from "react";
+import { useState } from "react";
+import { api } from "y/utils/api";
+import DeleteIcon from "../shared/DeleteIcon";
+import { Card, CardContent, CardFooter } from "../ui/card";
+import { Switch } from "../ui/switch";
+
+import { Button } from "y/components/ui/button";
+import { Input } from "y/components/ui/input";
+import { Label } from "y/components/ui/label";
+import Loader from "../shared/Loader";
 
 export type PrivateLinkProps = {
   link: Link;
 };
 
 const PrivateLink: NextPage<PrivateLinkProps> = ({ link }) => {
+  const { id, name: dataName, to: dataTo } = link;
   const ctx = api.useContext();
   const { mutate: deleteLinkMutation } = api.link.deleteLink.useMutation({
     onSuccess: async () => {
@@ -19,11 +25,12 @@ const PrivateLink: NextPage<PrivateLinkProps> = ({ link }) => {
     },
   });
 
-  const { mutate: toggleActive } = api.link.setIsActive.useMutation({
-    onSuccess: async () => {
-      await ctx.link.getAllUserLinks.invalidate();
-    },
-  });
+  const { mutate: toggleActive, isLoading: isToggleLoading } =
+    api.link.setIsActive.useMutation({
+      onSuccess: async () => {
+        await ctx.link.getAllUserLinks.invalidate();
+      },
+    });
 
   const deleteLink = (id: string) => {
     deleteLinkMutation({ id });
@@ -32,23 +39,74 @@ const PrivateLink: NextPage<PrivateLinkProps> = ({ link }) => {
   const toggleIsActive = (id: string, isActive: boolean) => {
     toggleActive({ id, isActive });
   };
+  const [name, setName] = useState<string>(dataName);
+  const [to, setTo] = useState<string>(dataTo);
+  const { mutate: updateLinkMutation, isLoading: isUpdateLoading } =
+    api.link.updateLink.useMutation({
+      onSuccess: () => {
+        void ctx.link.getAllUserLinks.invalidate();
+      },
+    });
+
+  const updateLink = (args: Record<string, string>) => {
+    updateLinkMutation({ id, ...args });
+  };
+
+  const submit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    updateLink({ name, to });
+  };
   return (
     <div className="centered h-30 my-2 max-w-xs">
       <div className="flex">
-        <div className="flex flex-row rounded-xl border-2 border-gray-200 p-2">
-          <div className="flex items-center rounded-sm border-black">
-            <div className="flex flex-col">
-              <Row name="name" value={link.name} id={link.id} />
-              <Row name="to" value={link.to} id={link.id} />
+        <Card className="w-[350px]">
+          <CardContent className="pt-6">
+            <form>
+              <div className="grid w-full items-center gap-4">
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="name">name</Label>
+                  <Input
+                    id="name"
+                    placeholder="Name of your link"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="to">link</Label>
+                  <Input
+                    id="to"
+                    placeholder="Link to resource"
+                    value={to}
+                    onChange={(e) => setTo(e.target.value)}
+                  />
+                </div>
+              </div>
+            </form>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            {isUpdateLoading ? (
+              <Loader />
+            ) : (
+              <Button size={"sm"} onClick={(e) => submit(e)}>
+                save
+              </Button>
+            )}
+            <div className="flex items-center">
+              <p>is active</p>
+              <div className="ml-3 flex h-8 w-8 items-center">
+                {isToggleLoading ? (
+                  <Loader />
+                ) : (
+                  <Switch
+                    checked={link.isActive}
+                    onClick={() => toggleIsActive(id, !link.isActive)}
+                  />
+                )}
+              </div>
             </div>
-            <div
-              onClick={() => toggleIsActive(link.id, !link.isActive)}
-              className="ml-3"
-            >
-              <Toggle isActive={link.isActive} />
-            </div>
-          </div>
-        </div>
+          </CardFooter>
+        </Card>
         <div
           onClick={() => deleteLink(link.id)}
           className="ml-2 flex items-center"
@@ -61,56 +119,3 @@ const PrivateLink: NextPage<PrivateLinkProps> = ({ link }) => {
 };
 
 export default PrivateLink;
-
-export type RowProps = {
-  name: string;
-  value: string;
-  id: string;
-};
-const Row: NextPage<RowProps> = ({ name, value, id }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [data, setData] = useState<string>(value);
-  const ctx = api.useContext();
-  const { mutate: updateLinkMutation } = api.link.updateLink.useMutation({
-    onSuccess: () => {
-      void ctx.link.getAllUserLinks.invalidate();
-    },
-  });
-
-  const updateLink = (args: Record<string, string>) => {
-    updateLinkMutation({ id, ...args });
-  };
-
-  const updateHandler = () => {
-    if (isEditing) {
-      updateLink({ [name]: data });
-    }
-    setIsEditing(!isEditing);
-  };
-
-  return (
-    <>
-      <div className="flex p-1">
-        <div onClick={updateHandler}>
-          {isEditing ? <OkIcon /> : <EditIcon />}
-        </div>
-        <div className="ml-2">{name}:</div>
-        <div className="ml-2">
-          <input
-            className={`w-auto rounded bg-transparent outline-none ${isEditing ? "outline-gray-500" : ""
-              }`}
-            type="text"
-            disabled={!isEditing}
-            value={data}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                updateHandler();
-              }
-            }}
-            onChange={(e) => setData(e.target.value)}
-          />
-        </div>
-      </div>
-    </>
-  );
-};

@@ -4,11 +4,15 @@ import EditIcon from "y/components/shared/EditIcon";
 import OkIcon from "y/components/shared/OkIcon";
 import { UserAvatar } from "y/components/shared/UserLogo";
 import { api } from "y/utils/api";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import {
+  type GetServerSideProps,
+  type InferGetServerSidePropsType,
+} from "next";
 import { getSession } from "next-auth/react";
-import { Session } from "next-auth";
+import { type Session } from "next-auth";
 import Loader from "y/components/shared/Loader";
 import Cookies from "universal-cookie";
+import { Button } from "y/components/ui/button";
 
 export type LinksProps = {
   session: Session;
@@ -40,8 +44,8 @@ const Links: React.FC<LinksProps> = ({
     if (desirableUsername) {
       updateUsername({ username: desirableUsername });
       setUsername(desirableUsername);
-      const cookies = new Cookies()
-      cookies.remove('username')
+      const cookies = new Cookies();
+      cookies.remove("username");
       return;
     }
     if (user) {
@@ -94,14 +98,15 @@ const Links: React.FC<LinksProps> = ({
         <UserAvatar username={username ?? ""} />
       </div>
       <div className="mb-2 flex flex-row">
-        <div className="centered max-h-100px mb-5 flex-row ">
+        <div className="centered max-h-100px mb-5 flex flex-row ">
           <div className="mr-2" onClick={editUsername}>
             {isEditing ? <OkIcon /> : <EditIcon />}
           </div>
           <input
             style={inputStyle}
-            className={`w-max rounded bg-transparent outline-none ${isEditing ? "outline-gray-500" : ""
-              }`}
+            className={`w-max rounded bg-transparent outline-none ${
+              isEditing ? "outline-gray-500" : ""
+            }`}
             ref={ref}
             id="username"
             name="username"
@@ -124,16 +129,20 @@ const Links: React.FC<LinksProps> = ({
       {isLoading ? (
         <Loader />
       ) : (
-        <button
-          className="rounded-md border-2 border-gray-500 px-3 py-1"
-          onClick={createEmptyLink}
-        >
+        <Button variant="default" className="px-8" onClick={createEmptyLink}>
           add
-        </button>
+        </Button>
       )}
-      <a href={publicLink.current ?? ""} target="_blank" className="mt-3">
-        see public profile
-      </a>
+      <Button variant="link">
+        <a
+          href={publicLink.current ?? ""}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3"
+        >
+          see public profile
+        </a>
+      </Button>
     </main>
   );
 };
@@ -149,7 +158,9 @@ export const getServerSideProps: GetServerSideProps<ProfileData> = async (
 ) => {
   const session = await getSession(context);
   const cookies = new Cookies(context.req.headers.cookie);
-  const desirableUsername = cookies.get("username") ? String(cookies.get("username")) : undefined;
+  const desirableUsername = cookies.get("username")
+    ? String(cookies.get("username"))
+    : undefined;
   return {
     props: {
       session: session ?? undefined,
