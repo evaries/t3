@@ -5,10 +5,11 @@ import { api } from "y/utils/api";
 import { type UsernameValidation } from "y/utils/types";
 import { validationErrorText } from "y/utils/utils";
 import Cookies from "universal-cookie";
-
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 const Hero: NextPage = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [origin, setOrigin] = useState<string>();
   const [username, setUsername] = useState<string>("");
   const [usernameValidation, setUsernameValidation] =
@@ -36,9 +37,9 @@ const Hero: NextPage = () => {
       setUsernameValidation("general");
       return;
     }
-    const cookies = new Cookies()
-    cookies.set('username', username)
-    void router.push('/auth/signin')
+    const cookies = new Cookies();
+    cookies.set("username", username);
+    void router.push("/auth/signin");
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -54,33 +55,29 @@ const Hero: NextPage = () => {
       <h3 className=" mb-6 text-center text-sm sm:text-2xl md:text-3xl">
         Keep multiple links in one place. Share one.
       </h3>
-      <div className="centered items-start">
-        <div className="w-full max-w-[360px]">
-          <div className="border-grey-500 flex rounded border-2 px-3 py-[2px]">
+      <div className="centered">
+        <div className="flex w-full max-w-[360px] items-center">
+          <div className=" flex items-center px-3 py-[2px]">
             <span>{origin}/</span>
-            <input
-              className={`ml-1 w-full bg-transparent focus:border-transparent focus:outline-none focus:ring-0 ${usernameValidation !== "valid" ? "text-red-500" : ""} `}
-              autoFocus
-              value={username}
-              onChange={(e) => onChange(e)}
-            />
+            <Input autoFocus value={username} onChange={(e) => onChange(e)} />
           </div>
-          <span
-            className={`${usernameValidation !== "valid" ? "visible" : "invisible"
-              } block min-h-[40px]  text-sm text-red-500`}
-          >
-            {validationErrorText(usernameValidation)}
-          </span>
         </div>
-        <button
-          className="ml-3 whitespace-nowrap rounded border-2 border-gray-500 px-3 py-[2px] sm:ml-6"
+        <Button
+          size={"sm"}
+          variant={"default"}
           onClick={() => void checkUsername()}
         >
           get link
-        </button>
+        </Button>
       </div>
+      <span
+        className={`${
+          usernameValidation !== "valid" ? "visible" : "invisible"
+        } mt-3 block min-h-[40px]  text-sm text-red-500`}
+      >
+        {validationErrorText(usernameValidation)}
+      </span>
     </div>
   );
 };
 export default Hero;
-
