@@ -52,9 +52,7 @@ const Feature: React.FC<FeatureProps> = ({ text, header }) => {
           </h2>
         </div>
         <div className="flex flex-grow flex-col justify-between">
-          <p className="text-base leading-relaxed text-white dark:text-gray-800">
-            {text}
-          </p>
+          <p className="text-base leading-relaxed">{text}</p>
         </div>
       </div>
     </div>
