@@ -20,9 +20,9 @@ export type LinksProps = {
 };
 
 const Links: React.FC<LinksProps> = ({
-  session,
-  desirableUsername,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+      session,
+      desirableUsername,
+    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const ctx = api.useContext();
   const { data: user, isFetched } = api.user.getCurrentUser.useQuery();
   const [username, setUsername] = useState<string | undefined>();
@@ -93,7 +93,7 @@ const Links: React.FC<LinksProps> = ({
     });
   };
   return (
-    <main className="flex w-full flex-col items-center justify-center bg-gray-100 px-6 lg:w-1/2">
+    <main className="flex w-full flex-col items-center justify-center bg-gray-100 p-6 lg:w-1/2">
       <div className="mb-2">
         <UserAvatar username={username ?? ""} />
       </div>
@@ -129,20 +129,15 @@ const Links: React.FC<LinksProps> = ({
       {isLoading ? (
         <Loader />
       ) : (
-        <Button variant="default" className="px-8" onClick={createEmptyLink}>
-          add
-        </Button>
+        <div className="mr-[32px] flex w-full max-w-[348px] justify-between">
+          <Button variant="default" className="px-8" onClick={createEmptyLink}>
+            add
+          </Button>
+          <a href={publicLink.current ?? ""} target="_blank" rel="noreferrer">
+            <Button variant="outline">see public profile</Button>
+          </a>
+        </div>
       )}
-      <Button variant="link">
-        <a
-          href={publicLink.current ?? ""}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-3"
-        >
-          see public profile
-        </a>
-      </Button>
     </main>
   );
 };

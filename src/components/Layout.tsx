@@ -3,6 +3,7 @@ import Footer from "./Footer";
 import { virgil } from "y/utils/consts";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
+import { Toaster } from "./ui/toaster";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -12,6 +13,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <Header />
         <main className="align-center flex w-full justify-center bg-gray-100 ">
           {children}
+          <Toaster />
         </main>
         <Footer />
       </div>
