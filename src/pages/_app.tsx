@@ -4,16 +4,10 @@ import Layout from "y/components/Layout";
 import type { NextComponentType, NextPageContext } from "next";
 import type { AppProps } from "next/app";
 import PublicLayout from "y/components/PublicLayout";
-import "react-simple-toasts/dist/theme/dark.css";
-import { toastConfig } from "react-simple-toasts";
 import GoogleTagManager from "y/components/shared/GoogleTag";
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 import { GeistSans } from "geist/font/sans";
-
-toastConfig({
-  theme: "dark",
-});
 
 export type MyAppProps = AppProps & {
   session: Session;
