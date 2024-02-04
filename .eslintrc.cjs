@@ -34,6 +34,7 @@ const config = {
     "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-empty-interface": "warn",
+    "react-hooks/rules-of-hooks": "warn",
   },
 };
 
