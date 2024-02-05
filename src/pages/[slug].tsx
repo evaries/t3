@@ -1,11 +1,11 @@
 import type { NextPage } from "next";
-import PublicLink from "y/components/entities/PublicLink";
-import { UserAvatar } from "y/components/shared/UserLogo";
-import { api } from "y/utils/api";
 import { useRouter } from "next/router";
+import PublicLink from "y/components/entities/PublicLink";
 import ShareIconBox from "y/components/shared/ShareIconBox";
-import { copyToClipboard } from "y/utils/utils";
+import { UserAvatar } from "y/components/shared/UserLogo";
 import { useToast } from "y/components/ui/use-toast";
+import { api } from "y/utils/api";
+import { copyToClipboard } from "y/utils/utils";
 
 export type NextPageWithLayout = NextPage & {
   Layout?: string;
@@ -35,7 +35,7 @@ const PublicPage: NextPageWithLayout = (props) => {
 
   return (
     <div className="centered h-screen">
-      <div className="relative w-80">
+      <div className="relative w-[34rem] px-3">
         <UserAvatar username={user.username} />
         <div
           onClick={(e) => {
@@ -46,11 +46,14 @@ const PublicPage: NextPageWithLayout = (props) => {
               description: "Link copied!",
             });
           }}
-          className="absolute right-0 top-0"
+          className="absolute right-[0.75rem] top-0"
         >
           <ShareIconBox />
         </div>
-        <div className="my-2 flex justify-center font-semibold">{`@${user.username}`}</div>
+        <span className="my-2 flex justify-center font-semibold">{`@${user.username}`}</span>
+        <p className={"my-2 flex justify-center text-center"}>
+          {"Lorem ipsum dolor, sit amet consectetur adipisicing elit. "}
+        </p>
         {user.links
           .filter((link) => link.isActive)
           .map((link) => (
