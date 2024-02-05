@@ -57,29 +57,39 @@ const PrivateLink: NextPage<PrivateLinkProps> = ({ link }) => {
     updateLink({ name, to });
   };
   return (
-    <div className="centered h-30 my-2 max-w-xs">
-      <div className="flex">
-        <Card className="w-[350px]">
+    <div className="centered h-30 my-2">
+      <div className="flex w-full">
+        <Card className="w-full">
           <CardContent className="pt-6">
             <form>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="name">name</Label>
-                  <Input
-                    id="name"
-                    placeholder="Name of your link"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
+                  <div className="grid grid-cols-5 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      name
+                    </Label>
+                    <Input
+                      id="name"
+                      placeholder="Name of your link"
+                      className="col-span-4"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
                 </div>
                 <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="to">link</Label>
-                  <Input
-                    id="to"
-                    placeholder="Link to resource"
-                    value={to}
-                    onChange={(e) => setTo(e.target.value)}
-                  />
+                  <div className="grid grid-cols-5 items-center gap-4">
+                    <Label htmlFor="to" className="text-right">
+                      link
+                    </Label>
+                    <Input
+                      id="to"
+                      placeholder="Link to resource"
+                      value={to}
+                      className="col-span-4"
+                      onChange={(e) => setTo(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
             </form>
@@ -93,7 +103,6 @@ const PrivateLink: NextPage<PrivateLinkProps> = ({ link }) => {
               </Button>
             )}
             <div className="flex items-center">
-              <p>is active</p>
               <div className="ml-3 flex h-8 w-8 items-center">
                 {isToggleLoading ? (
                   <Loader />

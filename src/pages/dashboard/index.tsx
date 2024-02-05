@@ -1,18 +1,19 @@
-import React, { type CSSProperties, useEffect, useRef, useState } from "react";
-import PrivateLink from "y/components/entities/PrivateLink";
-import EditIcon from "y/components/shared/EditIcon";
-import OkIcon from "y/components/shared/OkIcon";
-import { UserAvatar } from "y/components/shared/UserLogo";
-import { api } from "y/utils/api";
 import {
   type GetServerSideProps,
   type InferGetServerSidePropsType,
 } from "next";
-import { getSession } from "next-auth/react";
 import { type Session } from "next-auth";
-import Loader from "y/components/shared/Loader";
+import { getSession } from "next-auth/react";
+import React, { useEffect, useRef, useState, type CSSProperties } from "react";
 import Cookies from "universal-cookie";
+import PrivateLink from "y/components/entities/PrivateLink";
+import { SocialDialog } from "y/components/entities/SocialDialog";
+import EditIcon from "y/components/shared/EditIcon";
+import Loader from "y/components/shared/Loader";
+import OkIcon from "y/components/shared/OkIcon";
+import { UserAvatar } from "y/components/shared/UserLogo";
 import { Button } from "y/components/ui/button";
+import { api } from "y/utils/api";
 
 export type LinksProps = {
   session: Session;
@@ -20,9 +21,9 @@ export type LinksProps = {
 };
 
 const Links: React.FC<LinksProps> = ({
-      session,
-      desirableUsername,
-    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  session,
+  desirableUsername,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const ctx = api.useContext();
   const { data: user, isFetched } = api.user.getCurrentUser.useQuery();
   const [username, setUsername] = useState<string | undefined>();
@@ -93,7 +94,7 @@ const Links: React.FC<LinksProps> = ({
     });
   };
   return (
-    <main className="flex w-full flex-col items-center justify-center bg-gray-100 p-6 lg:w-1/2">
+    <main className="flex w-full max-w-[500px] flex-col items-center justify-center bg-gray-100 p-6 lg:w-1/2">
       <div className="mb-2">
         <UserAvatar username={username ?? ""} />
       </div>
@@ -126,16 +127,24 @@ const Links: React.FC<LinksProps> = ({
         return <PrivateLink key={link.id} link={link} />;
       })}
       <br />
+
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="mr-[32px] flex w-full max-w-[348px] justify-between">
-          <Button variant="default" className="px-8" onClick={createEmptyLink}>
-            add
-          </Button>
-          <a href={publicLink.current ?? ""} target="_blank" rel="noreferrer">
-            <Button variant="outline">see public profile</Button>
-          </a>
+        <div className="flex w-full">
+          <div className="mr-[32px] flex w-full justify-between gap-2">
+            <Button
+              variant="default"
+              className="px-8"
+              onClick={createEmptyLink}
+            >
+              add
+            </Button>
+            <SocialDialog />
+            <a href={publicLink.current ?? ""} target="_blank" rel="noreferrer">
+              <Button variant="outline">see public profile</Button>
+            </a>
+          </div>
         </div>
       )}
     </main>
