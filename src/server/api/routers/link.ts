@@ -34,6 +34,7 @@ export const linkRouter = createTRPCRouter({
         name: z.string().min(1),
         to: z.string().min(1),
         position: z.string(),
+        isSocial: z.boolean().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -43,6 +44,7 @@ export const linkRouter = createTRPCRouter({
           name: input.name,
           to: input.to,
           position: input.position,
+          isSocialMedia: input.isSocial ?? false,
           userId: ctx.session.user.id,
         },
       });

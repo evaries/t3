@@ -18,12 +18,22 @@ export type PrivateLinkProps = {
 
 const PrivateLink: NextPage<PrivateLinkProps> = ({ link }) => {
   const { id, name: dataName, to: dataTo } = link;
+  const [name, setName] = useState<string>(dataName);
+  const [to, setTo] = useState<string>(dataTo);
   const ctx = api.useContext();
+
   const { mutate: deleteLinkMutation } = api.link.deleteLink.useMutation({
     onSuccess: async () => {
       await ctx.link.getAllUserLinks.invalidate();
     },
   });
+
+  const { mutate: updateLinkMutation, isLoading: isUpdateLoading } =
+    api.link.updateLink.useMutation({
+      onSuccess: () => {
+        void ctx.link.getAllUserLinks.invalidate();
+      },
+    });
 
   const { mutate: toggleActive, isLoading: isToggleLoading } =
     api.link.setIsActive.useMutation({
@@ -39,14 +49,6 @@ const PrivateLink: NextPage<PrivateLinkProps> = ({ link }) => {
   const toggleIsActive = (id: string, isActive: boolean) => {
     toggleActive({ id, isActive });
   };
-  const [name, setName] = useState<string>(dataName);
-  const [to, setTo] = useState<string>(dataTo);
-  const { mutate: updateLinkMutation, isLoading: isUpdateLoading } =
-    api.link.updateLink.useMutation({
-      onSuccess: () => {
-        void ctx.link.getAllUserLinks.invalidate();
-      },
-    });
 
   const updateLink = (args: Record<string, string>) => {
     updateLinkMutation({ id, ...args });
