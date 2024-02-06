@@ -23,6 +23,7 @@ import { toast } from "y/components/ui/use-toast";
 import { z } from "zod";
 import TwitterIcon from "../shared/TwitterIcon";
 import { Input } from "../ui/input";
+import { api } from "y/utils/api";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -44,8 +45,15 @@ export function SocialDialog() {
     },
   });
 
+  const ctx = api.useContext();
+
+  const { mutate, isLoading } = api.link.createLink.useMutation({
+    onSuccess: () => {
+      void ctx.link.getAllUserLinks.invalidate();
+    },
+  });
+
   const onSubmit = (data: z.infer<typeof FormSchema>): void => {
-    console.log(data);
     toast({
       title: "You submitted the following values:",
     });

@@ -21,13 +21,15 @@ export type LinksProps = {
 };
 
 const Links: React.FC<LinksProps> = ({
-  session,
-  desirableUsername,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+      session,
+      desirableUsername,
+    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const ctx = api.useContext();
   const { data: user, isFetched } = api.user.getCurrentUser.useQuery();
   const [username, setUsername] = useState<string | undefined>();
   const [isEditing, setIsEditing] = useState(false);
+  const [bio, setBio] = useState<string | undefined>("");
+  const [isEditingBio, setIsEditingBio] = useState(false);
   const [inputStyle, setInputStyle] = useState<CSSProperties>({});
   const publicLink = useRef<string | null>(null);
 
@@ -43,7 +45,7 @@ const Links: React.FC<LinksProps> = ({
   useEffect(() => {
     if (!isFetched) return;
     if (desirableUsername) {
-      updateUsername({ username: desirableUsername });
+      updateUser({ username: desirableUsername });
       setUsername(desirableUsername);
       const cookies = new Cookies();
       cookies.remove("username");
@@ -51,10 +53,11 @@ const Links: React.FC<LinksProps> = ({
     }
     if (user) {
       if (!user.username) {
-        updateUsername({ username: session?.user.id ?? "" });
+        updateUser({ username: session?.user.id ?? "" });
         setUsername(session?.user.id ?? "");
       }
       setUsername(user.username);
+      setBio(user.bio ?? "");
     }
   }, [isFetched]);
 
@@ -65,7 +68,7 @@ const Links: React.FC<LinksProps> = ({
     }
   }, [username?.length]);
 
-  const { mutate: updateUsername } = api.user.updateUsername.useMutation({
+  const { mutate: updateUser } = api.user.updateUser.useMutation({
     onSuccess: () => {
       setUsername(desirableUsername ? desirableUsername : username);
       void ctx.user.getCurrentUser.invalidate();
@@ -82,10 +85,17 @@ const Links: React.FC<LinksProps> = ({
 
   const editUsername = () => {
     if (isEditing) {
-      updateUsername({ username: username ?? "" });
+      updateUser({ username: username ?? "" });
       setUsername(username);
     }
     setIsEditing(!isEditing);
+  };
+  const editBio = () => {
+    if (isEditingBio) {
+      updateUser({ bio: bio ?? "" });
+      setBio(bio);
+    }
+    setIsEditingBio(!isEditingBio);
   };
 
   const inputStyles = () => {
@@ -99,7 +109,7 @@ const Links: React.FC<LinksProps> = ({
         <UserAvatar username={username ?? ""} />
       </div>
       <div className="mb-2 flex flex-row">
-        <div className="centered max-h-100px mb-5 flex flex-row ">
+        <div className="centered max-h-100px flex flex-row ">
           <div className="mr-2" onClick={editUsername}>
             {isEditing ? <OkIcon /> : <EditIcon />}
           </div>
@@ -123,6 +133,35 @@ const Links: React.FC<LinksProps> = ({
           />
         </div>
       </div>
+      {bio || isEditingBio ? (
+        <div className="mb-2 flex flex-row">
+          <div className="centered max-h-100px mb-5 flex flex-row ">
+            <div className="mr-2" onClick={editBio}>
+              {isEditingBio ? <OkIcon /> : <EditIcon />}
+            </div>
+            <input
+              style={inputStyle}
+              className={`w-max rounded bg-transparent outline-none ${
+                isEditingBio ? "outline-gray-500" : ""
+              }`}
+              ref={ref}
+              id="bio"
+              name="bio"
+              type="text"
+              disabled={!isEditingBio}
+              value={bio}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  editBio();
+                }
+              }}
+              onChange={(e) => setBio(e.target.value)}
+            />
+          </div>
+        </div>
+      ) : (
+        <div onClick={() => setIsEditingBio(true)}>add bio</div>
+      )}
       {data?.map((link) => {
         return <PrivateLink key={link.id} link={link} />;
       })}

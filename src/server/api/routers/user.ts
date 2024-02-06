@@ -18,20 +18,27 @@ export const userRouter = createTRPCRouter({
     return ctx.db.user.findMany();
   }),
 
-  updateUsername: protectedProcedure
+  updateUser: protectedProcedure
     .input(
       z.object({
-        username: z.string(),
+        username: z.string().optional(),
+        bio: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const updateData: Record<string, any> = {};
+      if (input.username) {
+        updateData.username = input.username;
+      }
+
+      if (input.bio) {
+        updateData.bio = input.bio;
+      }
       return ctx.db.user.update({
         where: {
           id: ctx.session.user.id,
         },
-        data: {
-          username: input.username,
-        },
+        data: updateData,
       });
     }),
 
