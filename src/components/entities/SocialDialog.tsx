@@ -53,10 +53,7 @@ export function SocialDialog() {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>): Promise<void> => {
-    console.log(data)
-    debugger;
-    await mutate({ name: data.name, to: data.link, position: '0', isSocial: true })
+  const onSubmit = (data: z.infer<typeof FormSchema>): void => {
     toast({
       title: "You submitted the following values:",
     });
