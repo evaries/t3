@@ -16,6 +16,18 @@ export const linkRouter = createTRPCRouter({
     });
   }),
 
+  getUserCustomLinks: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.link.findMany({
+      where: { authorId: ctx.session.user.id, isSocialMedia: false },
+    });
+  }),
+
+  getUserSocialLinks: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.link.findMany({
+      where: { authorId: ctx.session.user.id, isSocialMedia: true },
+    });
+  }),
+
   getLinksByUserId: protectedProcedure
     .input(
       z.object({

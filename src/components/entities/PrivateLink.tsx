@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import * as React from "react";
 import { useState } from "react";
 import { api } from "y/utils/api";
-import DeleteIcon from "../shared/DeleteIcon";
+import DeleteIcon from "../shared/icons/DeleteIcon";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Switch } from "../ui/switch";
 

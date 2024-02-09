@@ -21,9 +21,10 @@ import {
 } from "y/components/ui/select";
 import { toast } from "y/components/ui/use-toast";
 import { z } from "zod";
-import TwitterIcon from "../shared/TwitterIcon";
+import Twitter from "../shared/icons/Twitter";
 import { Input } from "../ui/input";
 import { api } from "y/utils/api";
+import Instagram from "../shared/icons/Instagram";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -34,7 +35,12 @@ const FormSchema = z.object({
   }),
 });
 
-const socialItems = [{ value: "twitter", icon: <TwitterIcon /> }];
+export const socialSelect = [
+  { value: "twitter", icon: <Twitter /> },
+  { value: "instagram", icon: <Instagram /> },
+] as const;
+
+export type SocialSelectItemsType = (typeof socialSelect)[number]["value"];
 
 export function SocialDialog() {
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -53,7 +59,14 @@ export function SocialDialog() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof FormSchema>): void => {
+  const submit = (): void => {
+    const { link, name } = form.getValues();
+    mutate({
+      name,
+      to: link,
+      isSocial: true,
+      position: "1",
+    });
     toast({
       title: "You submitted the following values:",
     });
@@ -65,10 +78,7 @@ export function SocialDialog() {
       </DialogTrigger>
       <DialogContent className={"max-w-md"}>
         <Form {...form}>
-          <form
-            onSubmit={void form.handleSubmit(onSubmit)}
-            className="w-full space-y-6"
-          >
+          <form method="POST" className="w-full space-y-6">
             <FormField
               control={form.control}
               name="name"
@@ -85,7 +95,7 @@ export function SocialDialog() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {socialItems.map((item) => {
+                      {socialSelect.map((item) => {
                         return (
                           <SelectItem value={item.value} key={item.value}>
                             <div className="flex items-center gap-4">
@@ -114,7 +124,7 @@ export function SocialDialog() {
                 </FormItem>
               )}
             />
-            <Button type="submit">save</Button>
+            <Button onClick={submit}>save</Button>
           </form>
         </Form>
       </DialogContent>
