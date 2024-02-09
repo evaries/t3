@@ -15,7 +15,7 @@ const SocialLinks: React.FC<SocialLinksProps> = ({ links }) => {
     <div className="flex gap-3">
       {links.map((link) => {
         return (
-          <a href={link.to} target="_blank">
+          <a href={link.to} target="_blank" key={link.id}>
             {icons[link.name as SocialSelectItemsType]}
           </a>
         );
