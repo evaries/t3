@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import PublicLink from "y/components/entities/PublicLink";
-import ShareIconBox from "y/components/shared/ShareIconBox";
+import ShareIconBox from "y/components/shared/icons/ShareIconBox";
 import { UserAvatar } from "y/components/shared/UserLogo";
 import { useToast } from "y/components/ui/use-toast";
 import { api } from "y/utils/api";

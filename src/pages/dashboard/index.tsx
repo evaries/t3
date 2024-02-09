@@ -8,12 +8,13 @@ import React, { useEffect, useRef, useState, type CSSProperties } from "react";
 import Cookies from "universal-cookie";
 import PrivateLink from "y/components/entities/PrivateLink";
 import { SocialDialog } from "y/components/entities/SocialDialog";
-import EditIcon from "y/components/shared/EditIcon";
+import EditIcon from "y/components/shared/icons/EditIcon";
 import Loader from "y/components/shared/Loader";
-import OkIcon from "y/components/shared/OkIcon";
+import OkIcon from "y/components/shared/icons/OkIcon";
 import { UserAvatar } from "y/components/shared/UserLogo";
 import { Button } from "y/components/ui/button";
 import { api } from "y/utils/api";
+import SocialLinks from "y/components/entities/SocialLinks";
 
 export type LinksProps = {
   session: Session;
@@ -33,12 +34,14 @@ const Links: React.FC<LinksProps> = ({
   const [inputStyle, setInputStyle] = useState<CSSProperties>({});
   const publicLink = useRef<string | null>(null);
 
-  const { data } = api.link.getAllUserLinks.useQuery();
+  const { data: socialLinks } = api.link.getUserSocialLinks.useQuery();
+  const { data: customLinks } = api.link.getUserCustomLinks.useQuery();
   const ref = useRef<HTMLInputElement>(null);
 
   const { mutate, isLoading } = api.link.createLink.useMutation({
     onSuccess: () => {
-      void ctx.link.getAllUserLinks.invalidate();
+      void ctx.link.getUserCustomLinks.invalidate();
+      void ctx.link.getUserSocialLinks.invalidate();
     },
   });
 
@@ -79,7 +82,7 @@ const Links: React.FC<LinksProps> = ({
   });
 
   const createEmptyLink = () => {
-    const position = data ? String(data.length + 1) : "0";
+    const position = customLinks ? String(customLinks.length + 1) : "0";
     mutate({ name: "name", to: "#", position });
   };
 
@@ -162,7 +165,8 @@ const Links: React.FC<LinksProps> = ({
       ) : (
         <div onClick={() => setIsEditingBio(true)}>add bio</div>
       )}
-      {data?.map((link) => {
+      {socialLinks ? <SocialLinks links={socialLinks} /> : null}
+      {customLinks?.map((link) => {
         return <PrivateLink key={link.id} link={link} />;
       })}
       <br />
