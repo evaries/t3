@@ -50,7 +50,7 @@ const Home: NextPage = () => {
               go to dashboard
             </Button>
             <Button
-              variant={"default"}
+              variant={"outline"}
               onClick={(e) => {
                 void e.preventDefault();
                 void push(data ? `/${data?.username}` : "");
