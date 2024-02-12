@@ -20,11 +20,11 @@ export type LinksProps = {
   session: Session;
   desirableUsername: string | undefined;
 };
-
+//TODO: refactor duplicated inputs
 const Links: React.FC<LinksProps> = ({
-      session,
-      desirableUsername,
-    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  session,
+  desirableUsername,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const ctx = api.useContext();
   const { data: user, isFetched } = api.user.getCurrentUser.useQuery();
   const [username, setUsername] = useState<string | undefined>();
@@ -32,11 +32,13 @@ const Links: React.FC<LinksProps> = ({
   const [bio, setBio] = useState<string | undefined>("");
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [inputStyle, setInputStyle] = useState<CSSProperties>({});
+  const [inputStyleBio, setInputStyleBio] = useState<CSSProperties>({});
   const publicLink = useRef<string | null>(null);
 
   const { data: socialLinks } = api.link.getUserSocialLinks.useQuery();
   const { data: customLinks } = api.link.getUserCustomLinks.useQuery();
   const ref = useRef<HTMLInputElement>(null);
+  const refBio = useRef<HTMLInputElement>(null);
 
   const { mutate, isLoading } = api.link.createLink.useMutation({
     onSuccess: () => {
@@ -70,6 +72,10 @@ const Links: React.FC<LinksProps> = ({
       publicLink.current = `${window.location.origin}/${username}`;
     }
   }, [username?.length]);
+
+  useEffect(() => {
+    inputStylesBio();
+  }, [bio?.length]);
 
   const { mutate: updateUser } = api.user.updateUser.useMutation({
     onSuccess: () => {
@@ -106,6 +112,11 @@ const Links: React.FC<LinksProps> = ({
       width: ref.current ? String(ref.current.value.length) + "ch" : "auto",
     });
   };
+  const inputStylesBio = () => {
+    setInputStyleBio({
+      width: refBio.current ? String(refBio.current.value.length) + "ch" : "auto",
+    });
+  };
   return (
     <main className="flex w-full max-w-[500px] flex-col items-center justify-center bg-gray-100 p-6 lg:w-1/2">
       <div className="mb-2">
@@ -118,9 +129,8 @@ const Links: React.FC<LinksProps> = ({
           </div>
           <input
             style={inputStyle}
-            className={`w-max rounded bg-transparent outline-none ${
-              isEditing ? "outline-gray-500" : ""
-            }`}
+            className={`w-max rounded bg-transparent outline-none ${isEditing ? "outline-gray-500" : ""
+              }`}
             ref={ref}
             id="username"
             name="username"
@@ -142,11 +152,10 @@ const Links: React.FC<LinksProps> = ({
             {isEditingBio ? <OkIcon /> : <EditIcon />}
           </div>
           <input
-            style={inputStyle}
-            className={`w-max rounded bg-transparent outline-none ${
-              isEditingBio ? "outline-gray-500" : ""
-            }`}
-            ref={ref}
+            style={inputStyleBio}
+            className={`w-max rounded bg-transparent outline-none ${isEditingBio ? "outline-gray-500" : ""
+              }`}
+            ref={refBio}
             id="bio"
             name="bio"
             type="text"
