@@ -19,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "y/components/ui/select";
-import { toast } from "y/components/ui/use-toast";
 import { api } from "y/utils/api";
 import { socialSelect } from "y/utils/consts";
 import { z } from "zod";
@@ -60,9 +59,6 @@ export function SocialDialog() {
       to: link,
       isSocial: true,
       position: "1",
-    });
-    toast({
-      title: "You submitted the following values:",
     });
   };
   return (
