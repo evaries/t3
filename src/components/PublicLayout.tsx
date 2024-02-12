@@ -1,4 +1,4 @@
-import { virgil } from "y/utils/consts";
+import { virgil } from "y/utils/consts.tsx";
 import { Toaster } from "./ui/toaster";
 
 const PublicLayout: React.FC<{ children: React.ReactNode }> = ({

@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import * as React from "react";
 import { useState } from "react";
 import { api } from "y/utils/api";
-import DeleteIcon from "../shared/icons/DeleteIcon";
+import DeleteIcon from "../shared/icons/Delete";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Switch } from "../ui/switch";
 
@@ -24,21 +24,21 @@ const PrivateLink: NextPage<PrivateLinkProps> = ({ link }) => {
 
   const { mutate: deleteLinkMutation } = api.link.deleteLink.useMutation({
     onSuccess: async () => {
-      await ctx.link.getAllUserLinks.invalidate();
+      await ctx.link.getUserCustomLinks.invalidate();
     },
   });
 
   const { mutate: updateLinkMutation, isLoading: isUpdateLoading } =
     api.link.updateLink.useMutation({
       onSuccess: () => {
-        void ctx.link.getAllUserLinks.invalidate();
+        void ctx.link.getUserCustomLinks.invalidate();
       },
     });
 
   const { mutate: toggleActive, isLoading: isToggleLoading } =
     api.link.setIsActive.useMutation({
       onSuccess: async () => {
-        await ctx.link.getAllUserLinks.invalidate();
+        await ctx.link.getUserCustomLinks.invalidate();
       },
     });
 

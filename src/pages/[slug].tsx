@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import PublicLink from "y/components/entities/PublicLink";
-import ShareIconBox from "y/components/shared/icons/ShareIconBox";
+import SocialLinks from "y/components/entities/SocialLinks";
+import ShareIconBox from "y/components/shared/icons/ShareBox";
 import { UserAvatar } from "y/components/shared/UserLogo";
 import { useToast } from "y/components/ui/use-toast";
 import { api } from "y/utils/api";
@@ -26,12 +27,15 @@ const PublicPage: NextPageWithLayout = (props) => {
 
   if (isLoading) return <div className="centered h-screen">Loading...</div>;
 
-  if (!user)
+  if (!user) {
     return (
       <div className="centered h-screen">
         <div>Username does not exist</div>
       </div>
     );
+  }
+
+  const socialLinks = user.links.filter((link) => link.isSocialMedia);
 
   return (
     <div className="centered h-screen">
@@ -50,10 +54,11 @@ const PublicPage: NextPageWithLayout = (props) => {
         >
           <ShareIconBox />
         </div>
-        <span className="my-2 flex justify-center font-semibold">{`@${user.username}`}</span>
-        <p className={"my-2 flex justify-center text-center"}>
-          {"Lorem ipsum dolor, sit amet consectetur adipisicing elit. "}
-        </p>
+        <span className="my-2 flex justify-center font-semibold">
+          {`@${user.username}`}
+        </span>
+        <p className={"my-2 flex justify-center text-center"}>{user.bio}</p>
+        {socialLinks.length ? <SocialLinks links={socialLinks} /> : null}
         {user.links
           .filter((link) => link.isActive)
           .map((link) => (

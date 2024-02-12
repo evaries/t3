@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import { copyToClipboard } from "y/utils/utils";
-import ShareIconLinks from "../shared/icons/ShareIconLinks";
+import ShareIconLinks from "../shared/icons/ShareLinks";
 import { useToast } from "../ui/use-toast";
 
 export type PublicLinkProps = {

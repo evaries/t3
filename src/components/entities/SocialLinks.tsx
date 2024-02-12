@@ -1,22 +1,51 @@
 import { Link } from "@prisma/client";
-import Twitter from "../shared/icons/Twitter";
 import { SocialSelectItemsType } from "./SocialDialog";
-import Instagram from "../shared/icons/Instagram";
+import { socialIcons } from "y/utils/consts.tsx";
+import { X } from "lucide-react";
+import { api } from "y/utils/api";
 
-const icons: Record<SocialSelectItemsType, React.JSX.Element> = {
-  twitter: <Twitter />,
-  instagram: <Instagram />,
-};
+export type SocialLinksProps = { links: Link[]; removable?: boolean };
 
-export type SocialLinksProps = { links: Link[] };
+const SocialLinks: React.FC<SocialLinksProps> = ({ links, removable }) => {
+  if (removable) {
+    const ctx = api.useContext();
 
-const SocialLinks: React.FC<SocialLinksProps> = ({ links }) => {
+    const { mutate } = api.link.deleteLink.useMutation({
+      onSuccess: async () => {
+        await ctx.link.getUserSocialLinks.invalidate();
+      },
+    });
+
+    const deleteSocial = (id: string) => {
+      mutate({ id });
+    };
+
+    return (
+      <div className="flex justify-center gap-3 py-3">
+        {links.map((link) => {
+          return (
+            <div
+              key={link.id}
+              onClick={() => deleteSocial(link.id)}
+              className="group relative"
+            >
+              <div className=" invisible absolute h-8 w-8 cursor-pointer bg-gray-100 group-hover:visible">
+                <X className="absolute bottom-0 left-0 right-0 top-0 m-auto group-hover:visible" />
+              </div>
+              {socialIcons[link.name as SocialSelectItemsType]}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   return (
-    <div className="flex gap-3">
+    <div className="flex justify-center gap-3 py-3">
       {links.map((link) => {
         return (
           <a href={link.to} target="_blank" key={link.id}>
-            {icons[link.name as SocialSelectItemsType]}
+            {socialIcons[link.name as SocialSelectItemsType]}
           </a>
         );
       })}

@@ -20,11 +20,10 @@ import {
   SelectValue,
 } from "y/components/ui/select";
 import { toast } from "y/components/ui/use-toast";
-import { z } from "zod";
-import Twitter from "../shared/icons/Twitter";
-import { Input } from "../ui/input";
 import { api } from "y/utils/api";
-import Instagram from "../shared/icons/Instagram";
+import { socialSelect } from "y/utils/consts";
+import { z } from "zod";
+import { Input } from "../ui/input";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -34,11 +33,6 @@ const FormSchema = z.object({
     message: "Username must be at least 2 characters.",
   }),
 });
-
-export const socialSelect = [
-  { value: "twitter", icon: <Twitter /> },
-  { value: "instagram", icon: <Instagram /> },
-] as const;
 
 export type SocialSelectItemsType = (typeof socialSelect)[number]["value"];
 
@@ -55,7 +49,7 @@ export function SocialDialog() {
 
   const { mutate, isLoading } = api.link.createLink.useMutation({
     onSuccess: () => {
-      void ctx.link.getAllUserLinks.invalidate();
+      void ctx.link.getUserSocialLinks.invalidate();
     },
   });
 

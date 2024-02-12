@@ -8,7 +8,7 @@ import React, { useEffect, useRef, useState, type CSSProperties } from "react";
 import Cookies from "universal-cookie";
 import PrivateLink from "y/components/entities/PrivateLink";
 import { SocialDialog } from "y/components/entities/SocialDialog";
-import EditIcon from "y/components/shared/icons/EditIcon";
+import EditIcon from "y/components/shared/icons/Edit";
 import Loader from "y/components/shared/Loader";
 import OkIcon from "y/components/shared/icons/OkIcon";
 import { UserAvatar } from "y/components/shared/UserLogo";
@@ -111,7 +111,7 @@ const Links: React.FC<LinksProps> = ({
       <div className="mb-2">
         <UserAvatar username={username ?? ""} />
       </div>
-      <div className="mb-2 flex flex-row">
+      <div className="flex flex-row py-1">
         <div className="centered max-h-100px flex flex-row ">
           <div className="mr-2" onClick={editUsername}>
             {isEditing ? <OkIcon /> : <EditIcon />}
@@ -137,35 +137,33 @@ const Links: React.FC<LinksProps> = ({
         </div>
       </div>
       {bio || isEditingBio ? (
-        <div className="mb-2 flex flex-row">
-          <div className="centered max-h-100px mb-5 flex flex-row ">
-            <div className="mr-2" onClick={editBio}>
-              {isEditingBio ? <OkIcon /> : <EditIcon />}
-            </div>
-            <input
-              style={inputStyle}
-              className={`w-max rounded bg-transparent outline-none ${
-                isEditingBio ? "outline-gray-500" : ""
-              }`}
-              ref={ref}
-              id="bio"
-              name="bio"
-              type="text"
-              disabled={!isEditingBio}
-              value={bio}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  editBio();
-                }
-              }}
-              onChange={(e) => setBio(e.target.value)}
-            />
+        <div className="flex flex-row py-1">
+          <div className="mr-2" onClick={editBio}>
+            {isEditingBio ? <OkIcon /> : <EditIcon />}
           </div>
+          <input
+            style={inputStyle}
+            className={`w-max rounded bg-transparent outline-none ${
+              isEditingBio ? "outline-gray-500" : ""
+            }`}
+            ref={ref}
+            id="bio"
+            name="bio"
+            type="text"
+            disabled={!isEditingBio}
+            value={bio}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                editBio();
+              }
+            }}
+            onChange={(e) => setBio(e.target.value)}
+          />
         </div>
       ) : (
         <div onClick={() => setIsEditingBio(true)}>add bio</div>
       )}
-      {socialLinks ? <SocialLinks links={socialLinks} /> : null}
+      {socialLinks ? <SocialLinks links={socialLinks} removable /> : null}
       {customLinks?.map((link) => {
         return <PrivateLink key={link.id} link={link} />;
       })}

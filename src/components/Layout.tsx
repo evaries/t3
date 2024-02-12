@@ -1,6 +1,6 @@
 import Header from "./Header";
 import Footer from "./Footer";
-import { virgil } from "y/utils/consts";
+import { virgil } from "y/utils/consts.tsx";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Toaster } from "./ui/toaster";
