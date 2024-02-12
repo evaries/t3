@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Dialog, Popover } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { virgil } from "y/utils/consts";
+import { virgil } from "y/utils/consts.tsx";
 import Login from "./entities/Login";
 import Logout from "./entities/Logout";
 import { useSession } from "next-auth/react";
