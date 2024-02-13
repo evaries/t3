@@ -23,10 +23,12 @@ export const userRouter = createTRPCRouter({
       z.object({
         username: z.string().optional(),
         bio: z.string().optional(),
+        image: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const updateData: Record<string, any> = {};
+
       if (input.username) {
         updateData.username = input.username;
       }
@@ -34,6 +36,11 @@ export const userRouter = createTRPCRouter({
       if (input.bio) {
         updateData.bio = input.bio;
       }
+
+      if (input.image) {
+        updateData.image = input.image;
+      }
+
       return ctx.db.user.update({
         where: {
           id: ctx.session.user.id,

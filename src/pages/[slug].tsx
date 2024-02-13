@@ -40,7 +40,7 @@ const PublicPage: NextPageWithLayout = (props) => {
   return (
     <div className="centered h-screen">
       <div className="relative w-[34rem] px-3">
-        <UserAvatar username={user.username} />
+        <UserAvatar username={user.username} imageUrl={user?.image ?? ''} />
         <div
           onClick={(e) => {
             e.preventDefault();
