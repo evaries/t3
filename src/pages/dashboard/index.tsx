@@ -15,6 +15,7 @@ import { UserAvatar } from "y/components/shared/UserLogo";
 import { Button } from "y/components/ui/button";
 import { api } from "y/utils/api";
 import SocialLinks from "y/components/entities/SocialLinks";
+import { UploadButton } from "y/utils/uploadthings";
 
 export type LinksProps = {
   session: Session;
@@ -22,9 +23,9 @@ export type LinksProps = {
 };
 //TODO: refactor duplicated inputs
 const Links: React.FC<LinksProps> = ({
-  session,
-  desirableUsername,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+      session,
+      desirableUsername,
+    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const ctx = api.useContext();
   const { data: user, isFetched } = api.user.getCurrentUser.useQuery();
   const [username, setUsername] = useState<string | undefined>();
@@ -114,14 +115,34 @@ const Links: React.FC<LinksProps> = ({
   };
   const inputStylesBio = () => {
     setInputStyleBio({
-      width: refBio.current ? String(refBio.current.value.length) + "ch" : "auto",
+      width: refBio.current
+        ? String(refBio.current.value.length) + "ch"
+        : "auto",
     });
   };
   return (
     <main className="flex w-full max-w-[500px] flex-col items-center justify-center bg-gray-100 p-6 lg:w-1/2">
       <div className="mb-2">
-        <UserAvatar username={username ?? ""} />
+        <UserAvatar username={username ?? ""} imageUrl={user?.image ?? ""} />
       </div>
+      <UploadButton
+        endpoint="imageUploader"
+        appearance={{
+          button:
+            "ut-ready:bg-gray-1000 ut-uploading:cursor-not-allowed  bg-slate-900 bg-none after:bg-orange-400",
+        }}
+        onBeforeUploadBegin={(files) => {
+          return files.map(
+            (f) => new File([f], user?.id + "-" + f.name, { type: f.type })
+          );
+        }}
+        onClientUploadComplete={async (res) => {
+          updateUser({ image: res[0]?.url });
+        }}
+        onUploadError={(error: Error) => {
+          alert(`ERROR! ${error.message}`);
+        }}
+      />
       <div className="flex flex-row py-1">
         <div className="centered max-h-100px flex flex-row ">
           <div className="mr-2" onClick={editUsername}>
@@ -129,8 +150,9 @@ const Links: React.FC<LinksProps> = ({
           </div>
           <input
             style={inputStyle}
-            className={`w-max rounded bg-transparent outline-none ${isEditing ? "outline-gray-500" : ""
-              }`}
+            className={`w-max rounded bg-transparent outline-none ${
+              isEditing ? "outline-gray-500" : ""
+            }`}
             ref={ref}
             id="username"
             name="username"
@@ -153,8 +175,9 @@ const Links: React.FC<LinksProps> = ({
           </div>
           <input
             style={inputStyleBio}
-            className={`w-max rounded bg-transparent outline-none ${isEditingBio ? "outline-gray-500" : ""
-              }`}
+            className={`w-max rounded bg-transparent outline-none ${
+              isEditingBio ? "outline-gray-500" : ""
+            }`}
             ref={refBio}
             id="bio"
             name="bio"
