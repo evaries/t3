@@ -133,11 +133,11 @@ const Links: React.FC<LinksProps> = ({
         }}
         onBeforeUploadBegin={(files) => {
           return files.map(
-            (f) => new File([f], user?.id + "-" + f.name, { type: f.type })
+            (f) => new File([f], user!.id + "-" + f.name, { type: f.type })
           );
         }}
-        onClientUploadComplete={async (res) => {
-          updateUser({ image: res[0]?.url });
+        onClientUploadComplete={(res) => {
+          () => updateUser({ image: res[0]?.url });
         }}
         onUploadError={(error: Error) => {
           alert(`ERROR! ${error.message}`);
