@@ -23,6 +23,7 @@ import { api } from "y/utils/api";
 import { socialSelect } from "y/utils/consts";
 import { z } from "zod";
 import { Input } from "../ui/input";
+import { addWwwHttps } from "y/utils/utils";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -54,9 +55,11 @@ export function SocialDialog() {
 
   const submit = (): void => {
     const { link, name } = form.getValues();
+    const fullLink = addWwwHttps(link)
+    console.log('full', fullLink)
     mutate({
       name,
-      to: link,
+      to: fullLink,
       isSocial: true,
       position: "1",
     });

@@ -11,6 +11,7 @@ import { Button } from "y/components/ui/button";
 import { Input } from "y/components/ui/input";
 import { Label } from "y/components/ui/label";
 import Loader from "../shared/Loader";
+import { addWwwHttps } from "y/utils/utils";
 
 export type PrivateLinkProps = {
   link: Link;
@@ -56,7 +57,8 @@ const PrivateLink: NextPage<PrivateLinkProps> = ({ link }) => {
 
   const submit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    updateLink({ name, to });
+    const link = addWwwHttps(to)
+    updateLink({ name, to: link });
   };
   return (
     <div className="centered h-30 my-2">
