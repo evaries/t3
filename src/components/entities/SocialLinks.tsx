@@ -46,7 +46,7 @@ const SocialLinks: React.FC<SocialLinksProps> = ({ links, removable }) => {
     <div className="flex justify-center gap-3 py-3">
       {links.map((link) => {
         return (
-          <a href={"https://" + link.to} target="_blank" key={link.id}>
+          <a href={link.to} target="_blank" rel="noopener" key={link.id}>
             {socialIcons[link.name as SocialSelectItemsType]}
           </a>
         );

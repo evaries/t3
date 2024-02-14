@@ -16,3 +16,17 @@ export const validationErrorText = (error: UsernameValidation) => {
       return "";
   }
 };
+
+  export const addWwwHttps = (url: string): string => {
+    const httpsRegex = /^https?:///;
+    const wwwRegex = /^www\./;
+    if (httpsRegex.test(url)) {
+      if (wwwRegex.test(url)) {
+        return url;
+      } else {
+        return url.replace(httpsRegex, "https://www.");
+      }
+    } else {
+      return `https://www.${url}`;
+    }
+  }
